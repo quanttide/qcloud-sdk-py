@@ -4,10 +4,7 @@ import json
 from typing import Optional
 
 from tencentcloud.common.abstract_client import AbstractClient
-
-
-class QcloudSdkException(Exception):
-    pass
+from qcloud_sdk.base.exceptions import QcloudSdkException
 
 
 def call_qcloud_request(client: AbstractClient, action: str, request_params: dict,
