@@ -6,3 +6,6 @@ class QCloudAPIException(Exception):
         self.request_id = request_id
         self.err_code = err_code
         self.err_msg = err_msg
+
+    def __str__(self):
+        return f'\n- request id: {self.request_id}\n- error code: {self.err_code}\n- error message: {self.err_msg}'
