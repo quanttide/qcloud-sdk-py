@@ -6,6 +6,7 @@
 from typing import Union
 
 from ..base.client import QCloudAPIClient
+from .exception import QCloudSMSAPIException
 
 
 # 导入环境变量
@@ -19,7 +20,19 @@ class QCloudSMSAPIClient(QCloudAPIClient):
         self.service = 'sms'
         self.version = '2021-01-11'
 
-    def request_sms_api(self, api, api_params, region=None):
+    def request_sms_api(self, api: str, api_params: dict, region: str = 'ap-guangzhou'):
+        """
+        请求SMS短信服务API
+
+        :param api: API名称
+        :param api_params: API参数
+        :param region: 地域
+        :return:
+        """
+        # 支持地域
+        #  - https://cloud.tencent.com/document/api/382/52071#.E5.9C.B0.E5.9F.9F.E5.88.97.E8.A1.A8
+        assert region in ['ap-guangzhou', 'ap-nanjing']
+
         return super().request_api(self.service, api, api_params, region, self.version)
 
     def add_sms_template(self):
@@ -30,8 +43,9 @@ class QCloudSMSAPIClient(QCloudAPIClient):
         pass
 
     # --- 发送短信相关接口 ---
-    def send_sms(self, phone_number_list: Union[list, tuple], app_id: Union[int, str], template_id: Union[int, str], sign_name=None,
-                 template_param_list=None, extend_code=None, session_context=None, sender_id=None):
+    def send_sms(self, phone_number_list: Union[list, tuple], app_id: Union[int, str], template_id: Union[int, str],
+                 sign_name=None, template_param_list=None, extend_code=None,
+                 session_context=None, sender_id=None):
         """
         发送短信
 
@@ -42,26 +56,38 @@ class QCloudSMSAPIClient(QCloudAPIClient):
           - 验证phone_number_list传入手机号格式是否正确、是否同为国内或者国外手机号。
           - 如果phone_number_list标记为国内，验证sign_name是否传入。
           - 补充参数文档
+          - （重要）处理返回结果中的业务错误码，详见：https://cloud.tencent.com/document/api/382/52075#.E4.B8.9A.E5.8A.A1.E9.94.99.E8.AF.AF.E7.A0.81
         """
-        api_params = {'PhoneNumberSet': phone_number_list, 'SmsSdkAppid': app_id,
-                      'TemplateID': template_id, 'SignName': sign_name,
+        # API接口参数
+        api_params = {'PhoneNumberSet': phone_number_list, 'SmsSdkAppId': app_id,
+                      'TemplateId': template_id, 'SignName': sign_name,
                       'TemplateParamSet': template_param_list,
-                      'ExtendCode': extend_code,
-                      'SessionContext': session_context,
-                      'SenderId': sender_id}
-        data = self.request_sms_api('SendSms', api_params=api_params)
-        return data["SendStatusSet"]
+                      'SessionContext': session_context}
+        # 短信码号扩展号，默认未开通，开通才可传参
+        if extend_code:
+            api_params['ExtendCode'] = extend_code
+        # 国内短信无需填写该项；国际/港澳台短信已申请独立SenderId需要填写该字段，默认使用公共SenderId，无需填写该字段。
+        if sender_id:
+            api_params['SenderId'] = sender_id
 
-    def send_sms_to_single_user(self, phone_number, template_id, app_id, sign_name, template_param_list,
-                                extend_code, session_context, sender_id):
+        # 请求API
+        data = self.request_sms_api('SendSms', api_params=api_params)["SendStatusSet"]
+        # 返回结果
+        return data
+
+    def send_sms_to_single_user(self, phone_number, template_id, app_id, sign_name=None, template_param_list=None,
+                                session_context=None, extend_code=None, sender_id=None):
         """
         向单个用户发送短信（自定义API）
         :return:
         """
         data = self.send_sms(phone_number_list=[phone_number], template_id=template_id, app_id=app_id,
                              sign_name=sign_name, template_param_list=template_param_list, extend_code=extend_code,
-                             session_context=session_context, sender_id=sender_id)
-        return data[0]
+                             session_context=session_context, sender_id=sender_id)[0]
+        # 处理异常
+        if data['Code'] != 'Ok':
+            raise QCloudSMSAPIException(data['Code'], data['Message'])
+        return data
 
     def pull_send_sms_status(self):
         """

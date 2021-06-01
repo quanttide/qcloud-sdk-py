@@ -51,7 +51,7 @@ class QCloudAPIClient(object):
 
         # 请求API
         url = "https://" + endpoint
-        r = requests.post(url, headers=headers)
+        r = requests.post(url, json=api_params, headers=headers)
 
         # 解析数据
         data = r.json()['Response']
