@@ -6,7 +6,7 @@ import time
 import requests
 
 from .sign import join_auth
-from .exceptions import QCloudAPIException
+from .exception import QCloudAPIException
 
 
 class QCloudAPIClient(object):
@@ -21,13 +21,14 @@ class QCloudAPIClient(object):
         self.secret_id = secret_id or os.environ.get('TENCENT_SECRET_ID')
         self.secret_key = secret_key or os.environ.get('TENCENT_SECRET_KEY')
 
-    def request_api(self, service: str, api: str, api_params: dict, region=None) -> dict:
+    def request_api(self, service: str, api: str, api_params: dict, region=None, version='2017-03-12') -> dict:
         """
 
         :param service: 云服务标签，比如`cvm`（云数据库）
         :param api: 云API
         :param api_params: API参数
-        :param region: 地域
+        :param region: 云服务可选地域
+        :param version: API版本
         :return:
         """
         # 服务地址，默认就近接入
@@ -42,7 +43,7 @@ class QCloudAPIClient(object):
             'Content-Type': 'application/json',
             'X-TC-Action': api,
             'X-TC-Timestamp': str(timestamp),
-            'X-TC-Version': '2017-03-12',
+            'X-TC-Version': version,
             'Authorization': join_auth(self.secret_id, self.secret_key, endpoint, service, api_params, timestamp),
         }
         if region:
