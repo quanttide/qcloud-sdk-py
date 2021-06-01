@@ -6,6 +6,10 @@ import os
 from qcloud_sdk.sms.api import QCloudSMSAPIClient
 from qcloud_sdk.sms.exception import QCloudSMSAPIException
 
+# 导入环境变量
+from environs import Env
+Env().read_env()
+
 
 class SMSAPITestCase(unittest.TestCase):
     @classmethod

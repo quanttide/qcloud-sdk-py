@@ -9,31 +9,24 @@ from ..base.client import QCloudAPIClient
 from .exception import QCloudSMSAPIException
 
 
-# 导入环境变量
-from environs import Env
-Env().read_env()
-
-
 class QCloudSMSAPIClient(QCloudAPIClient):
-    def __init__(self, secret_id=None, secret_key=None):
+    def __init__(self, secret_id=None, secret_key=None, region: str = 'ap-guangzhou'):
         super().__init__(secret_id, secret_key)
         self.service = 'sms'
         self.version = '2021-01-11'
+        # 可选地域：https://cloud.tencent.com/document/api/382/52071#.E5.9C.B0.E5.9F.9F.E5.88.97.E8.A1.A8
+        assert region in ['ap-guangzhou', 'ap-nanjing']
+        self.region = region
 
-    def request_sms_api(self, api: str, api_params: dict, region: str = 'ap-guangzhou'):
+    def request_sms_api(self, api: str, api_params: dict):
         """
         请求SMS短信服务API
 
         :param api: API名称
         :param api_params: API参数
-        :param region: 地域
         :return:
         """
-        # 支持地域
-        #  - https://cloud.tencent.com/document/api/382/52071#.E5.9C.B0.E5.9F.9F.E5.88.97.E8.A1.A8
-        assert region in ['ap-guangzhou', 'ap-nanjing']
-
-        return super().request_api(self.service, api, api_params, region, self.version)
+        return super().request_api(self.service, api, api_params, self.region, self.version)
 
     def add_sms_template(self):
         """
