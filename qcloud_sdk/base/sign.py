@@ -6,6 +6,8 @@ import hmac
 from datetime import datetime
 
 algorithm = 'TC3-HMAC-SHA256'  # 签名方法V3
+http_method = "POST"
+canonical_query_string = ""
 canonical_uri = "/"
 signed_headers = "content-type;host"
 
@@ -15,8 +17,6 @@ def cal_hashed_payload(api_params):
 
 
 def join_canonical_request(endpoint, api_params):
-    http_method = "POST"
-    canonical_query_string = ""
     canonical_headers = "content-type:application/json\nhost:{endpoint}\n".format(endpoint=endpoint)
     hashed_payload = cal_hashed_payload(api_params)
     canonical_request = '\n'.join(

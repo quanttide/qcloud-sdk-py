@@ -21,33 +21,39 @@ class QCloudAPIClient(object):
         self.secret_id = secret_id or os.environ.get('TENCENT_SECRET_ID')
         self.secret_key = secret_key or os.environ.get('TENCENT_SECRET_KEY')
 
-    def request_api(self, service: str, api: str, api_params: dict, region=None, version='2017-03-12') -> dict:
-        """
-
-        :param service: 云服务标签，比如`cvm`（云数据库）
-        :param api: 云API
-        :param api_params: API参数
-        :param region: 云服务可选地域
-        :param version: API版本
-        :return:
-        """
-        # 服务地址，默认就近接入
-        endpoint = '{service}.tencentcloudapi.com'.format(service=service, region=region)
-
-        # 时间戳
-        timestamp = int(time.time())
-
-        # 公共参数
+    def gen_request_headers(self, endpoint, service, api, api_params, api_version, timestamp, region=None):
         headers = {
             'Host': endpoint,
             'Content-Type': 'application/json',
             'X-TC-Action': api,
             'X-TC-Timestamp': str(timestamp),
-            'X-TC-Version': version,
+            'X-TC-Version': api_version,
             'Authorization': join_auth(self.secret_id, self.secret_key, endpoint, service, api_params, timestamp),
         }
         if region:
             headers['X-TC-Region'] = region
+        return headers
+
+    def request_api(self, service: str, api: str, api_params: dict, endpoint=None, region=None, api_version='2017-03-12') -> dict:
+        """
+
+        :param service: 云服务标签，比如`cvm`（云数据库）
+        :param api: 云API
+        :param api_params: API参数
+        :param endpoint: API主机
+        :param region: 云服务可选地域
+        :param api_version: API版本
+        :return:
+        """
+        # 服务地址，默认就近接入
+        if not endpoint:
+            endpoint = '{service}.tencentcloudapi.com'.format(service=service, region=region)
+
+        # 时间戳
+        timestamp = int(time.time())
+
+        # 公共参数
+        headers = self.gen_request_headers(endpoint, service, api, api_params, api_version, timestamp, region)
 
         # 请求API
         url = "https://" + endpoint

@@ -13,7 +13,7 @@ class QCloudSMSAPIClient(QCloudAPIClient):
     def __init__(self, secret_id=None, secret_key=None, region: str = 'ap-guangzhou'):
         super().__init__(secret_id, secret_key)
         self.service = 'sms'
-        self.version = '2021-01-11'
+        self.api_version = '2021-01-11'
         # 可选地域：https://cloud.tencent.com/document/api/382/52071#.E5.9C.B0.E5.9F.9F.E5.88.97.E8.A1.A8
         assert region in ['ap-guangzhou', 'ap-nanjing']
         self.region = region
@@ -26,7 +26,7 @@ class QCloudSMSAPIClient(QCloudAPIClient):
         :param api_params: API参数
         :return:
         """
-        return super().request_api(self.service, api, api_params, self.region, self.version)
+        return super().request_api(self.service, api, api_params, self.region, self.api_version)
 
     def add_sms_template(self):
         """
