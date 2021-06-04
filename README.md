@@ -8,12 +8,12 @@
 
 推荐安装发布版：
 ```
-pip install https://e.coding.net/quanttide/qtapps-python/qcloud-sdk-py.git@0.0.1
+pip install git+https://e.coding.net/quanttide/qtapps-python/qcloud-sdk-py.git@0.0.1
 ```
 
 安装最新版本：
 ```
-pip install https://e.coding.net/quanttide/qtapps-python/qcloud-sdk-py.git
+pip install git+https://e.coding.net/quanttide/qtapps-python/qcloud-sdk-py.git
 ```
 
 ## 使用
