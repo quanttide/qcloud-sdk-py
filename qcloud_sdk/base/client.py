@@ -20,6 +20,8 @@ class QCloudAPIClient(object):
         """
         self.secret_id = secret_id or os.environ.get('TENCENT_SECRET_ID')
         self.secret_key = secret_key or os.environ.get('TENCENT_SECRET_KEY')
+        assert not self.secret_id, "SecretID不可为空，请在实例化时传入secret_id参数或配置环境变量的TENCENT_SECRET_ID"
+        assert not self.secret_key, "SecretKey不可为空，请在实例化时传入secret_key参数或配置环境变量的TENCENT_SECRET_KEY"
 
     def gen_request_headers(self, endpoint, service, api, api_params, api_version, timestamp, region=None):
         headers = {
