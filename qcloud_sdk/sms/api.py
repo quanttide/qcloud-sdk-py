@@ -26,7 +26,7 @@ class QCloudSMSAPIClient(QCloudAPIClient):
         :param api_params: API参数
         :return:
         """
-        return super().request_api(self.service, api, api_params, self.region, self.api_version)
+        return super().request_api(service=self.service, api=api, api_params=api_params, region=self.region, api_version=self.api_version)
 
     def add_sms_template(self):
         """

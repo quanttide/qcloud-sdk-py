@@ -9,6 +9,7 @@
 ### Fixed
 
 - 修复APIClient类assert条件异常。
+- 修复BaseAPIClient和SMSAPIClient因为调整参数导致的传参异常。
 
 ## [0.0.1] - 2021-06-01
 
