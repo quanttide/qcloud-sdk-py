@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## [0.0.2] - 2021-06-23 
+
+### Features
+
+- 实现CloudBase云开发HTTP访问服务的Client类。
+
+
 ## [0.0.1] - 2021-06-01
 
 ### Features
