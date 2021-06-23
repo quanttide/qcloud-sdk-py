@@ -8,7 +8,7 @@ import requests
 
 class CloudBaseHTTPClient(object):
     def __init__(self, env_id=None, qcloud_app_id=None, region=None, custom_domain=None):
-
+        assert custom_domain or (env_id and qcloud_app_id and region), "未配置可用云开发HTTP访问设置"
         # 根域名
         if custom_domain:
             # 自定义域名
