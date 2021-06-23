@@ -6,6 +6,9 @@
 
 - 实现CloudBase云开发HTTP访问服务的Client类。
 
+### Fixed
+
+- 修复APIClient类assert条件异常。
 
 ## [0.0.1] - 2021-06-01
 
