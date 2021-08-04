@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import os.path
 
 import requests
 
@@ -27,7 +28,12 @@ class CIAMAPIClient(object):
 
     def request_ciam_api(self, method, api, query_params=None, data=None, headers=None):
         api_url = self.portal_host + api
-        r = requests.request(method, api_url, params=query_params, data=data, headers=headers, verify=r'./certs/tencentciam-com-chain.pem')
+        # CIAM域名证书
+        # 开发者笔记：
+        #   - 使用浏览器访问正常而Python不正常，原因是Python使用certifi库的证书，但此库不存在CIAM域名的证书，因此需要指定证书传入。
+        #   - 如果直接传入相对路径，在哪个模块调用会寻找哪个模块的相对路径，因此需要使用如下方式固定到本模块的相对路径。
+        cert_path = os.path.join(os.path.dirname(__file__), 'certs/tencentciam-com-chain.pem')
+        r = requests.request(method, api_url, params=query_params, data=data, headers=headers, verify=cert_path)
         return r.json()
 
     def get_oidc_jwks(self):
