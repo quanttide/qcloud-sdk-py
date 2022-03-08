@@ -3,7 +3,7 @@
 import unittest
 import os
 
-from qcloud_sdk.cloudbase.http import CloudBaseHTTPClient
+from depreciated.cloudbase.http import CloudBaseHTTPClient
 
 # 环境变量
 from environs import Env

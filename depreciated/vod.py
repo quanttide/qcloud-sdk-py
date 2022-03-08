@@ -35,7 +35,7 @@ from tencentcloud.vod.v20180717 import vod_client, models
 
 from django.conf import settings
 
-from .base import call_qcloud_request
+from qcloud_sdk.base import call_qcloud_request
 from qtutils.random import gen_random_str
 
 

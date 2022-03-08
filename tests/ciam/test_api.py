@@ -3,7 +3,7 @@
 import unittest
 
 # 测试目标
-from qcloud_sdk.ciam.api import CIAMAPIClient
+from depreciated.ciam.api import CIAMAPIClient
 
 # 环境变量
 import os

@@ -1,17 +1,17 @@
-# -*- coding: utf-8 -*-
+"""
+
+"""
 
 import os
 import time
 
 import requests
 
-from .sign import join_auth
-from .exception import QCloudAPIException
+from qcloud_sdk.base.sign import calculate_auth_string
+from qcloud_sdk.exceptions import QCloudAPIException
 
 
-class QCloudAPIClient(object):
-    exception_class = QCloudAPIException
-
+class APIClientInitializer(object):
     def __init__(self, secret_id=None, secret_key=None):
         """
 
@@ -23,49 +23,65 @@ class QCloudAPIClient(object):
         assert self.secret_id, "SecretID不可为空，请在实例化时传入secret_id参数或配置环境变量的TENCENT_SECRET_ID"
         assert self.secret_key, "SecretKey不可为空，请在实例化时传入secret_key参数或配置环境变量的TENCENT_SECRET_KEY"
 
-    def gen_request_headers(self, endpoint, service, api, api_params, api_version, timestamp, region=None):
+
+class BaseAPIClientMixin(object):
+    def generate_request_headers(self, endpoint, service, action, params, api_version, region=None, timestamp=None):
+        """
+        https://cloud.tencent.com/document/product/213/15692
+
+        :param endpoint:
+        :param service:
+        :param action:
+        :param params:
+        :param api_version:
+        :param region:
+        :param timestamp:
+        :return:
+        """
+        # 时间戳
+        timestamp = timestamp or int(time.time())
+        # 请求头
         headers = {
             'Host': endpoint,
             'Content-Type': 'application/json',
-            'X-TC-Action': api,
+            'X-TC-Action': action,
             'X-TC-Timestamp': str(timestamp),
             'X-TC-Version': api_version,
-            'Authorization': join_auth(self.secret_id, self.secret_key, endpoint, service, api_params, timestamp),
+            'Authorization': calculate_auth_string(self.secret_id, self.secret_key, endpoint, service, params, timestamp),
         }
         if region:
             headers['X-TC-Region'] = region
         return headers
 
-    def request_api(self, service: str, api: str, api_params: dict, endpoint=None, region=None, api_version='2017-03-12') -> dict:
+    def parse_response_data(self, response):
+        # 解析数据
+        data = response.json()['Response']
+        # 抛出API返回的异常
+        if 'Error' in data:
+            raise QCloudAPIException(request_id=data['RequestId'], err_code=data['Error']['Code'], err_msg=data['Error']['Message'])
+        # 返回数据
+        return data
+
+    def request_api(self, service: str, action: str, params: dict, endpoint=None, region=None, api_version='2017-03-12') -> dict:
         """
 
         :param service: 云服务标签，比如`cvm`（云数据库）
-        :param api: 云API
-        :param api_params: API参数
+        :param action: 云API，如``。
+        :param params: API参数
         :param endpoint: API主机
         :param region: 云服务可选地域
         :param api_version: API版本
         :return:
         """
         # 服务地址，默认就近接入
-        if not endpoint:
-            endpoint = '{service}.tencentcloudapi.com'.format(service=service, region=region)
-
-        # 时间戳
-        timestamp = int(time.time())
-
+        endpoint = endpoint or f'{service}.tencentcloudapi.com'
         # 公共参数
-        headers = self.gen_request_headers(endpoint, service, api, api_params, api_version, timestamp, region)
-
+        headers = self.generate_request_headers(endpoint, service, action, params, api_version, region=region)
         # 请求API
         url = "https://" + endpoint
-        r = requests.post(url, json=api_params, headers=headers)
+        r = requests.post(url, json=params, headers=headers)
+        return self.parse_response_data(r)
 
-        # 解析数据
-        data = r.json()['Response']
 
-        # 抛出API返回的异常
-        if 'Error' in data:
-            raise self.exception_class(request_id=data['RequestId'], err_code=data['Error']['Code'], err_msg=data['Error']['Message'])
-        # 返回数据
-        return data
+class BaseAPIClient(APIClientInitializer, BaseAPIClientMixin):
+    pass

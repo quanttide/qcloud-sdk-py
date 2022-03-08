@@ -1,3 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from .base import *
+# 通用APIClient
+from qcloud_sdk.api import APIClient
+
+# 各产品APIClient
+from qcloud_sdk.cos.client import CosAPIClient

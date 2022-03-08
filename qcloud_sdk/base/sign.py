@@ -1,24 +1,28 @@
-# -*- coding: utf-8 -*-
+"""
+
+"""
 
 import json
 import hashlib
 import hmac
 from datetime import datetime
 
-algorithm = 'TC3-HMAC-SHA256'  # 签名方法V3
+
+# 签名方法配置，支持的签名方法为V3
+algorithm = 'TC3-HMAC-SHA256'
 http_method = "POST"
 canonical_query_string = ""
 canonical_uri = "/"
 signed_headers = "content-type;host"
 
 
-def cal_hashed_payload(api_params):
+def calculate_hashed_payload(api_params):
     return hashlib.sha256(json.dumps(api_params).encode('utf-8')).hexdigest()
 
 
 def join_canonical_request(endpoint, api_params):
     canonical_headers = "content-type:application/json\nhost:{endpoint}\n".format(endpoint=endpoint)
-    hashed_payload = cal_hashed_payload(api_params)
+    hashed_payload = calculate_hashed_payload(api_params)
     canonical_request = '\n'.join(
         [http_method, canonical_uri, canonical_query_string, canonical_headers, signed_headers, hashed_payload])
     return canonical_request
@@ -44,7 +48,7 @@ def sign(secret_key, service, unsigned_string, date):
     return signature
 
 
-def join_auth(secret_id: str, secret_key: str, endpoint: str, service: str, api_params: dict, timestamp: int) -> str:
+def calculate_auth_string(secret_id: str, secret_key: str, endpoint: str, service: str, api_params: dict, timestamp: int) -> str:
     date = datetime.utcfromtimestamp(timestamp).strftime("%Y-%m-%d")
     credential_scope = gen_canonical_scope(date, service)
     canonical_request = join_canonical_request(endpoint, api_params)

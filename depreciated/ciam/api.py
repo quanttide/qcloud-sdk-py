@@ -29,6 +29,8 @@ class CIAMAPIClient(object):
         assert custom_portal_domain or custom_portal_name, '腾讯云平台域名或自建域名必须设置一个'
         self.portal_domain = custom_portal_domain or custom_portal_name + '.portal.tencentciam.com'
         self.portal_host = 'https://' + self.portal_domain
+        # 用户目录OIDC协议配置
+        self._oidc_config = None
         # 用户目录OIDC公钥
         self._oidc_jwks = None
 
@@ -41,6 +43,19 @@ class CIAMAPIClient(object):
         cert_path = os.path.join(os.path.dirname(__file__), 'certs/tencentciam-com-chain.pem')
         r = requests.request(method, api_url, params=query_params, data=data, headers=headers, verify=cert_path)
         return r.json()
+
+    def get_oidc_config(self):
+        return self.request_ciam_api('GET', '/.well-known/openid-configuration')
+
+    @property
+    def oidc_config(self):
+        """
+
+        :return:
+        """
+        if self._oidc_config is None:
+            self._oidc_config = self.get_oidc_config()
+        return self._oidc_config
 
     def get_oidc_jwks(self):
         return self.request_ciam_api('GET', '/oauth2/jwks')
