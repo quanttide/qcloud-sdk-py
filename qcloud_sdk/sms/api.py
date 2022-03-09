@@ -1,27 +1,34 @@
 # -*- coding: utf-8 -*-
 """
-腾讯云SMS短信服务API
+腾讯云短信服务（SMS）云API
 """
 
 from typing import Union
 
 
+# 服务可选地域
+SMS_SERVICE_REGIONS = ['ap-beijing', 'ap-guangzhou', 'ap-nanjing']
+SMS_SERVICE_REGIONS_DOC = 'https://cloud.tencent.com/document/api/382/52071#.E5.9C.B0.E5.9F.9F.E5.88.97.E8.A1.A8'
+
+
 class QCloudSmsAPIMixin(object):
-    def request_sms_api(self, action: str, params: dict, region: str = 'ap-guangzhou'):
+    def request_sms_api(self, action: str, params: dict, service_region: str, api_region: str = None):
         """
         请求SMS短信服务API
 
         :param action: API名称
         :param params: API参数
-        :param region: 可选地域，默认为广州（ap-guangzhou）。
+        :param api_region: API接入地域
+        :param service_region: 服务地域
         :return:
         """
-        # 可选地域：https://cloud.tencent.com/document/api/382/52071#.E5.9C.B0.E5.9F.9F.E5.88.97.E8.A1.A8
-        assert region in ['ap-guangzhou', 'ap-nanjing']
         # 请求API
-        return self.request_api(service='sms', action=action, params=params, region=self.region, api_version='2021-01-11')
+        return self.request_api(service='sms', action=action, params=params, api_version='2021-01-11',
+                                api_region=api_region, service_region=service_region,
+                                supported_service_regions=SMS_SERVICE_REGIONS,
+                                supported_service_regions_doc=SMS_SERVICE_REGIONS_DOC)
 
-    # ----- 短信模板API -----
+    # ----- 短信模板 -----
     def add_sms_template(self):
         """
         申请短信模板
@@ -29,7 +36,7 @@ class QCloudSmsAPIMixin(object):
         """
         pass
 
-    # --- 发送短信API ---
+    # --- 发送短信 ---
     def send_sms(self, phone_number_list: Union[list, tuple], app_id: Union[int, str], template_id: Union[int, str],
                  sign_name=None, template_param_list=None, extend_code=None,
                  session_context=None, sender_id=None):
