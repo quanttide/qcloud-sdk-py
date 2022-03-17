@@ -2,7 +2,7 @@
 
 ## [v0.1.0] - 2022-03-17 
 
-腾讯云基本APIClient，SMS短信服务和EB事件总线基本API。
+腾讯云基本APIClient，SMS短信服务基本API。
 
 ### Features
 
@@ -12,5 +12,6 @@
 - 异常类`QCloudAPIException`。
 
 云产品：
-- EB事件总线基本API，
-- SMS短信服务基本API，发送短信API。
+- SMS短信服务：
+  - 基本API。
+  - 发送短信API。
