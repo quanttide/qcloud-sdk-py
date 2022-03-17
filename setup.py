@@ -7,9 +7,10 @@ setup(
     url='quanttide.com',
     license='Apache 2.0',
     author='QuantTide Inc.',
-    author_email='tech@quanttide.com',
+    author_email='opensource@quanttide.com',
     description='腾讯云Python服务端SDK',
     install_requires=[
-        'requests'
+        'requests',
+        'dynaconf'
     ],
 )

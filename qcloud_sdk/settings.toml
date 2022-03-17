@@ -1,0 +1,14 @@
+# 默认配置
+[default]
+DEFAULT_REGION = '@none None'
+
+# EB事件总线
+# 默认使用DEFAULT_REGION
+EB_DEFAULT_REGION = '@none None'
+EB_SUPPORTED_REGIONS = ['ap-beijing', 'ap-chengdu', 'ap-chongqing', 'ap-guangzhou', 'ap-hongkong',
+    'ap-shanghai', 'ap-singapore', 'eu-moscow', 'na-siliconvalley']
+EB_SUPPORTED_REGIONS_DOC = 'https://cloud.tencent.com/document/product/1359/67707#.E5.9C.B0.E5.9F.9F.E5.88.97.E8.A1.A8'
+
+# SMS短信服务
+SMS_SUPPORTED_REGIONS = ['ap-beijing', 'ap-guangzhou', 'ap-nanjing']
+SMS_SUPPORTED_REGIONS_DOC = 'https://cloud.tencent.com/document/api/382/52071#.E5.9C.B0.E5.9F.9F.E5.88.97.E8.A1.A8'

@@ -3,30 +3,30 @@
 腾讯云短信服务（SMS）云API
 """
 
-from typing import Union
+from typing import Union, Optional
+
+from qcloud_sdk.config import settings
 
 
-# 服务可选地域
-SMS_SERVICE_REGIONS = ['ap-beijing', 'ap-guangzhou', 'ap-nanjing']
-SMS_SERVICE_REGIONS_DOC = 'https://cloud.tencent.com/document/api/382/52071#.E5.9C.B0.E5.9F.9F.E5.88.97.E8.A1.A8'
-
-
-class QCloudSmsAPIMixin(object):
-    def request_sms_api(self, action: str, params: dict, service_region: str, api_region: str = None):
+class SmsAPIMixin(object):
+    def request_sms_api(self, action: str, params: dict, region: Optional[str] = None, api_region: str = None):
         """
         请求SMS短信服务API
 
         :param action: API名称
         :param params: API参数
+        :param region: 服务地域
         :param api_region: API接入地域
-        :param service_region: 服务地域
         :return:
         """
+        region = region or settings.SMS_DEFAULT_REGION
+        if not region:
+            raise ValueError("地域（region）必填，请传入地域参数或设置QCLOUD_SMS_DEFAULT_REGION")
         # 请求API
         return self.request_api(service='sms', action=action, params=params, api_version='2021-01-11',
-                                api_region=api_region, service_region=service_region,
-                                supported_service_regions=SMS_SERVICE_REGIONS,
-                                supported_service_regions_doc=SMS_SERVICE_REGIONS_DOC)
+                                api_region=api_region, region=region,
+                                supported_regions=settings.SMS_SUPPORTED_REGIONS,
+                                supported_regions_doc=settings.SMS_SUPPORTED_REGIONS_DOC)
 
     # ----- 短信模板 -----
     def add_sms_template(self):
@@ -39,7 +39,7 @@ class QCloudSmsAPIMixin(object):
     # --- 发送短信 ---
     def send_sms(self, phone_number_list: Union[list, tuple], app_id: Union[int, str], template_id: Union[int, str],
                  sign_name=None, template_param_list=None, extend_code=None,
-                 session_context=None, sender_id=None):
+                 session_context=None, sender_id=None, region=None):
         """
         发送短信
 
@@ -54,9 +54,9 @@ class QCloudSmsAPIMixin(object):
         """
         # API接口参数
         params = {'PhoneNumberSet': phone_number_list, 'SmsSdkAppId': app_id,
-                      'TemplateId': template_id, 'SignName': sign_name,
-                      'TemplateParamSet': template_param_list,
-                      'SessionContext': session_context}
+                  'TemplateId': template_id, 'SignName': sign_name,
+                  'TemplateParamSet': template_param_list,
+                  'SessionContext': session_context}
         # 短信码号扩展号，默认未开通，开通才可传参
         if extend_code:
             params['ExtendCode'] = extend_code
@@ -65,17 +65,17 @@ class QCloudSmsAPIMixin(object):
             params['SenderId'] = sender_id
 
         # 请求API
-        data = self.request_sms_api('SendSms', params=params)["SendStatusSet"]
+        data = self.request_sms_api('SendSms', params=params, region=region)["SendStatusSet"]
         # 返回结果
         return data
 
     def send_sms_to_single_user(self, phone_number, template_id, app_id, sign_name=None, template_param_list=None,
-                                session_context=None, extend_code=None, sender_id=None):
+                                session_context=None, extend_code=None, sender_id=None, region=None):
         """
         向单个用户发送短信（自定义API）
         :return:
         """
-        return self.send_sms(phone_number_list=[phone_number], template_id=template_id, app_id=app_id,
+        return self.send_sms(region=region, phone_number_list=[phone_number], template_id=template_id, app_id=app_id,
                              sign_name=sign_name, template_param_list=template_param_list, extend_code=extend_code,
                              session_context=session_context, sender_id=sender_id)[0]
 

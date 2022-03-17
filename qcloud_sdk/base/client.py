@@ -4,12 +4,14 @@
 
 import os
 import time
+from typing import List, Optional
 
 import requests
-from typing import List, Optional
 
 from qcloud_sdk.base.sign import calculate_auth_string
 from qcloud_sdk.exceptions import QCloudAPIException
+from qcloud_sdk.config import settings
+
 
 
 class APIClientInitializer(object):
@@ -19,10 +21,10 @@ class APIClientInitializer(object):
         :param secret_id:
         :param secret_key:
         """
-        self.secret_id = secret_id or os.environ.get('TENCENT_SECRET_ID')
-        self.secret_key = secret_key or os.environ.get('TENCENT_SECRET_KEY')
-        assert self.secret_id, "SecretID不可为空，请在实例化时传入secret_id参数或配置环境变量的TENCENT_SECRET_ID"
-        assert self.secret_key, "SecretKey不可为空，请在实例化时传入secret_key参数或配置环境变量的TENCENT_SECRET_KEY"
+        self.secret_id = secret_id or settings.SECRET_ID
+        self.secret_key = secret_key or settings.SECRET_KEY
+        assert self.secret_id, "SecretID不可为空，请在实例化时传入secret_id参数或配置QCLOUD_SECRET_ID"
+        assert self.secret_key, "SecretKey不可为空，请在实例化时传入secret_key参数或配置QCLOUD_SECRET_KEY"
 
 
 class BaseAPIClientMixin(object):
@@ -63,18 +65,18 @@ class BaseAPIClientMixin(object):
         # 返回数据
         return data
 
-    def request_api(self, service: str, action: str, params: dict, api_version: str, api_region: Optional[str] = None,
-                    service_region: Optional[str] = None, supported_service_regions: Optional[List[str]] = None,
-                    supported_service_regions_doc: Optional[str] = None) -> dict:
+    def request_api(self, service: str, action: str, params: dict, api_version: str,
+                    region: Optional[str] = None, supported_regions: Optional[List[str]] = None, supported_regions_doc: Optional[str] = None,
+                    api_region: Optional[str] = None,) -> dict:
         """
         :param service: 云服务标签，比如`cvm`（云数据库）
         :param action: 云API，如``。
         :param params: API参数
         :param api_version: API版本。通常以云产品为单位指定。
+        :param region: 云服务地域
+        :param supported_regions: 此云服务支持地域列表
+        :param supported_regions_doc: 云服务支持地域列表的文档
         :param api_region: API接入地域
-        :param service_region: 云服务地域
-        :param supported_service_regions: 此云服务支持地域列表
-        :param supported_service_regions_doc: 云服务支持地域列表的文档
         :return:
         """
         # 服务地址，默认就近接入
@@ -83,11 +85,11 @@ class BaseAPIClientMixin(object):
         else:
             endpoint = f'{service}.tencentcloudapi.com'
         # 验证服务地域
-        if service_region and supported_service_regions and (service_region not in supported_service_regions):
+        if region and supported_regions and (region not in supported_regions):
             # TODO：对于更新服务地域以后未及时更新地域的情况，向开发者说明处理办法。
-            raise ValueError(f'{service_region}不在支持地域列表中，请查阅文档{supported_service_regions_doc}确认是否在支持地域中。')
+            raise ValueError(f'{region}不在支持地域列表中，请查阅文档{supported_regions_doc}确认是否在支持地域中。')
         # 公共参数
-        headers = self.generate_request_headers(endpoint, service, action, params, api_version, region=service_region)
+        headers = self.generate_request_headers(endpoint, service, action, params, api_version, region=region)
         # 请求API
         url = "https://" + endpoint
         r = requests.post(url, json=params, headers=headers)

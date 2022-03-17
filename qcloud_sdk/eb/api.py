@@ -4,19 +4,16 @@
 
 from typing import Optional
 
-# 服务可选地域
-EB_SERVICE_REGIONS = ['ap-beijing', 'ap-chengdu', 'ap-chongqing', 'ap-guangzhou', 'ap-hongkong',
-                      'ap-shanghai', 'ap-singapore', 'eu-moscow', 'na-siliconvalley']
-EB_SERVICE_REGIONS_DOC = 'https://cloud.tencent.com/document/product/1359/67707#.E5.9C.B0.E5.9F.9F.E5.88.97.E8.A1.A8'
+from qcloud_sdk.config import settings
 
 
 class EbAPIMixin(object):
-    def request_eb_api(self, action, region, params, api_region=None):
-        # TODO: 允许环境变量或Django声明式配置传入默认地域。
-        return self.request_api(service='sms', action=action, params=params, api_version='2021-04-16',
-                                api_region=api_region, service_region=region,
-                                supported_service_regions=EB_SERVICE_REGIONS,
-                                supported_service_regions_doc=EB_SERVICE_REGIONS_DOC)
+    def request_eb_api(self, action, params, region=None, api_region=None):
+        region = region or settings.EB_DEFAULT_REGION or settings.DEFAULT_REGION
+        return self.request_api(service='eb', action=action, params=params, region=region,
+                                api_version='2021-04-16', api_region=api_region,
+                                supported_regions=settings.EB_SUPPORTED_REGIONS,
+                                supported_regions_doc=settings.EB_SUPPORTED_REGIONS_DOC)
 
     # ----- 事件集 -----
     def create_event_bus(self, region: str, name: str, description: Optional[str] = None, api_region: Optional[str] = None):
@@ -37,7 +34,15 @@ class EbAPIMixin(object):
         }
         return self.request_eb_api(action='CreateEventBus', params=params, region=region, api_region=api_region)
 
-    def put_events(self, region, event_bus_id, event_list, api_region: Optional[str] = None):
+    def put_events(self, event_bus_id, event_list, region=None, api_region: Optional[str] = None):
+        """
+        投递事件，详见：https://cloud.tencent.com/document/product/1359/68465
+        :param region:
+        :param event_bus_id:
+        :param event_list:
+        :param api_region:
+        :return:
+        """
         params = {
             'EventBusId': event_bus_id,
             'EventList': event_list,

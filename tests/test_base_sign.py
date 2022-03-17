@@ -36,9 +36,9 @@ class SignatureTestCase(unittest.TestCase):
         self.assertEqual(signature, self.official_sign)
 
     def test_join_auth(self):
-        auth = join_auth(secret_id=self.secret_id, secret_key=self.secret_key,
-                         endpoint=self.endpoint, service=self.service,
-                         api_params=self.api_params, timestamp=self.timestamp)
+        auth = calculate_auth_string(secret_id=self.secret_id, secret_key=self.secret_key,
+                                     endpoint=self.endpoint, service=self.service,
+                                     api_params=self.api_params, timestamp=self.timestamp)
         self.assertEqual(auth, self.official_auth)
 
 
