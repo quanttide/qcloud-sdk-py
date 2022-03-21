@@ -7,7 +7,7 @@
 ## 安装
 
 ```
-pip install qcloud-sdk-py -i 
+pip install qcloud-sdk-py -i https://quanttide-pypi.pkg.coding.net/qtopen-python/qcloud-sdk-py/simple
 ```
 
 
