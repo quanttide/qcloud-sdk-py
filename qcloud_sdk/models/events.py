@@ -1,9 +1,11 @@
-# -*- coding: utf-8 -*-
+"""
+云事件
+"""
 
 import json
 
 
-class CloudEvent(object):
+class QCloudEvent(object):
     """
     云事件
     Defined by EB：https://cloud.tencent.com/document/api/1359/67704#Event

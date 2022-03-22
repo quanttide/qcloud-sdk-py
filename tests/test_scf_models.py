@@ -5,7 +5,7 @@
 import unittest
 
 from qcloud_sdk.config import settings
-from qcloud_sdk.scf.models import ScfResource
+from qcloud_sdk.scf.models import QCloudScfResource
 
 
 class ScfCloudResourceTestCase(unittest.TestCase):
@@ -18,10 +18,10 @@ class ScfCloudResourceTestCase(unittest.TestCase):
         }
 
     def test_init(self):
-        resource = ScfResource(**self.resource_raw)
+        resource = QCloudScfResource(**self.resource_raw)
 
     def test_to_string(self):
-        resource = ScfResource(**self.resource_raw)
+        resource = QCloudScfResource(**self.resource_raw)
         resource_str = resource.to_string()
         print(resource_str)
 

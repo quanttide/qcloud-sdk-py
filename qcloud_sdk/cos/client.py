@@ -19,5 +19,5 @@ class CosBaseAPIClient(APIClientInitializer, CosBaseAPIClientMixin):
     pass
 
 
-class CosAPIClient(CosBaseAPIClient, CosAPIMixin):
+class QCloudCosAPIClient(CosBaseAPIClient, CosAPIMixin):
     pass

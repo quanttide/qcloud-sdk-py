@@ -1,9 +1,9 @@
 """
-通用数据模型
+云资源数据模型
 """
 
 
-class CloudResource(object):
+class QCloudResource(object):
     """
     腾讯云资源
 

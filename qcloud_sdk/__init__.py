@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 
 # 通用APIClient
-from qcloud_sdk.api import APIClient
+from qcloud_sdk.api import QCloudAPIClient
 
 # 各产品APIClient
-from qcloud_sdk.cos.client import CosAPIClient
+from qcloud_sdk.cos.client import QCloudCosAPIClient
 
 # 异常类
 from qcloud_sdk.exceptions import QCloudAPIException

@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
-from qcloud_sdk.models import CloudResource
+from qcloud_sdk.models.resources import QCloudResource
 
 
-class ScfResource(CloudResource):
+class QCloudScfResource(QCloudResource):
     def __init__(self, region, account, namespace, function_name):
         self.namespace = namespace
         self.function_name = function_name

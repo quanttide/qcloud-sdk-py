@@ -9,7 +9,7 @@ from qcloud_sdk.eb.api import EbAPIMixin
 from qcloud_sdk.sms.api import SmsAPIMixin
 
 
-class APIClient(
+class QCloudAPIClient(
     APIClientInitializer,
     BaseAPIClientMixin,
     # 使用默认协议的云产品，使用BaseAPIClientMixin类。
