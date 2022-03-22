@@ -27,4 +27,5 @@ class QCloudScfEvent(QCloudEvent):
     def __init__(self, data, **attributes):
         attributes['source'] = attributes.get('source') or 'scf.cloud.tencent'
         attributes['subject'] = attributes.get('subject') or QCloudScfResource().to_string()
+        attributes['type'] = attributes.get('type') or ''
         super().__init__(data, **attributes)

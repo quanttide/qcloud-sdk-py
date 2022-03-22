@@ -1,6 +1,6 @@
 import unittest
 
-from qcloud_sdk.models.events import QCloudEvent
+from qcloud_sdk.scf.models import QCloudScfEvent
 
 from tests.client import APIClientTestCase
 from tests.test_eb_models import TestDataMixin
@@ -9,7 +9,7 @@ from tests.test_eb_models import TestDataMixin
 class EbAPITestCase(APIClientTestCase, TestDataMixin):
     def setUp(self):
         TestDataMixin.setUp(self)
-        self.event = QCloudEvent(**self.event_raw)
+        self.event = QCloudScfEvent(**self.event_raw)
 
     def test_request_eb_api(self):
         data = self.client.request_eb_api(action='ListEventBuses', params={})

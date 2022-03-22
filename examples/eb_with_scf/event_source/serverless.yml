@@ -13,4 +13,4 @@ inputs:
   role: SCF_EBFullAccess
   environments:
     variables:
-      QCLOUD_SDK_EB_DEFAULT_EVENT_BUS_ID: ${env.QCLOUD_SDK_EB_DEFAULT_EVENT_BUS_ID}
+      QCLOUDSDK_EB_DEFAULT_EVENT_BUS_ID: ${env.QCLOUDSDK_EB_DEFAULT_EVENT_BUS_ID}
