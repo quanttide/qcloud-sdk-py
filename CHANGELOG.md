@@ -18,7 +18,7 @@
 通用：
 - 使用CloudEvent官方SDK重构云事件数据模型`QCloudEvent`
 - 公开API重命名，增加QCloud。
-- 修改环境变量前缀为`QCLOUD_SDK`以避免云函数环境变量限制。
+- 修改环境变量前缀为`QCLOUDSDK`以避免云函数环境变量限制。
 
 云函数：
 - `QCloudScfResource`简化传参。

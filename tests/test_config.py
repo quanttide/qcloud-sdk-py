@@ -44,7 +44,7 @@ class DynaconfTestCase(unittest.TestCase):
         self.assertEqual('fake-scf-runtime', settings.SCF_RUNTIME)
         self.assertEqual('fake-scf-runtime', settings.scf_runtime)
         # 云函数运行环境的配置会被用户配置取代
-        self.assertEqual(os.environ.get('QCLOUD_SDK_DEFAULT_REGION'), settings.DEFAULT_REGION)
+        self.assertEqual(os.environ.get('QCLOUDSDK_DEFAULT_REGION'), settings.DEFAULT_REGION)
 
     @mock.patch.dict(os.environ, {
         'TENCENTCLOUD_SECRETID': 'fake-secret-id',
@@ -68,7 +68,7 @@ class DynaconfTestCase(unittest.TestCase):
         self.assertEqual('fake-scf-runtime', settings.scf_runtime)
         self.assertEqual('', settings.SESSION_TOKEN)
         # 云函数运行环境的配置会被用户配置取代
-        self.assertEqual(os.environ.get('QCLOUD_SDK_DEFAULT_REGION'), settings.DEFAULT_REGION)
+        self.assertEqual(os.environ.get('QCLOUDSDK_DEFAULT_REGION'), settings.DEFAULT_REGION)
 
 
 if __name__ == '__main__':
