@@ -2,6 +2,8 @@
 云资源数据模型
 """
 
+from qcloud_sdk.config import settings
+
 
 class QCloudResource(object):
     """
@@ -9,10 +11,10 @@ class QCloudResource(object):
 
     Defined by CAM: https://cloud.tencent.com/document/product/598/10606
     """
-    def __init__(self, service_type, region, account, resource):
+    def __init__(self, resource, service_type, region=None, account=None):
         self.service_type = service_type
-        self.region = region
-        self.account = account
+        self.region = region or settings.DEFAULT_REGION
+        self.account = account or f'uin/{settings.UIN}'
         self.resource = resource
 
     def to_string(self):
