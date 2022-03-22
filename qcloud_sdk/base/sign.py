@@ -1,5 +1,7 @@
 """
+签名算法V3
 
+https://cloud.tencent.com/document/product/213/30654
 """
 
 import json
