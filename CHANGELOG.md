@@ -23,6 +23,10 @@
 云函数：
 - `QCloudScfResource`简化传参。
 
+## Bugfix
+
+- setup.cfg增加package_data设置、修复package.find的exclude选项。
+
 ## [v0.2.0] - 2022-03-21
 
 云资源`CloudResource`和云事件`CloudEvent`数据模型，EB事件总线API。

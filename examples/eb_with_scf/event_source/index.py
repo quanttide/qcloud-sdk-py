@@ -5,12 +5,10 @@
 from qcloud_sdk.api import QCloudAPIClient
 from qcloud_sdk.scf.models import QCloudScfEvent
 
-# 单例
-client = QCloudAPIClient()
-
 
 def put_events():
     event = QCloudScfEvent(data={'task_id': '1'})
+    client = QCloudAPIClient()
     client.put_events(event_list=[event.to_dict()])
 
 
