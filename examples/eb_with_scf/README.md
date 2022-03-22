@@ -2,6 +2,8 @@
 
 ## Step1: 下载代码到本地
 
+```shell
+```
 
 ## Step2: 部署云函数到云端
 
@@ -44,6 +46,8 @@ pip3 install -r requirements.txt -t .
 
 注意不要使用`pip`，会使用系统内置的Python2的`pip`。
 
+点击"部署"，然后"测试"，检查事件源是否可以正常运行。
+
 
 ## Step3: 手动配置事件总线
 
@@ -70,7 +74,7 @@ pip3 install -r requirements.txt -t .
 切换到事件源函数，在"函数管理"的"函数配置"，设置环境变量：
 
 ```
-QCLOUD_SDK_EB_DEFAULT_EVENT_BUS_ID=<your-event-bus-id>
+QCLOUDSDK_EB_DEFAULT_EVENT_BUS_ID=<your-event-bus-id>
 ```
 
 点击保存。

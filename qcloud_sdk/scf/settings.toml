@@ -1,11 +1,16 @@
 [default]
 # 通用设置
-SECRET_ID = "@format {env[TENCENTCLOUD_SECRET_ID]}"
-SECRET_KEY = "@format {env[TENCENTCLOUD_SECRET_KEY]}"
+# 云API密钥，在云函数配置Role以后才有，否则为空。
+# TODO: 暂时使用jinja语法，format找到合适表达以后移除jinja依赖
+SECRET_ID = "@jinja {{env.TENCENTCLOUD_SECRETID | default()}}"
+SECRET_KEY = "@jinja {{env.TENCENTCLOUD_SECRETKEY | default()}}"
+# 暂不使用，用以测试jinja模板语言默认值是否正确传入。
+SESSION_TOKEN = "@jinja {{env.TENCENTCLOUD_SESSIONTOKEN | default()}}"
 UIN = "@format {env[TENCENTCLOUD_UIN]}"
 APPID = "@format {env[TENCENTCLOUD_APPID]}"
 DEFAULT_REGION = "@format {env[TENCENTCLOUD_REGION]}"
 
 # 云函数运行环境
 SCF_RUNTIME = "@format {env[SCF_RUNTIME]}"
+SCF_DEFAULT_NAMESPACE = "format {env[SCF_NAMESPACE]}"
 SCF_DEFAULT_FUNCTION_NAME = "@format {env[SCF_FUNCTIONNAME]}"

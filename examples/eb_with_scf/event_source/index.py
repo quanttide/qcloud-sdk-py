@@ -2,7 +2,7 @@
 事件源示例
 """
 
-from qcloud_sdk import QCloudAPIClient
+from qcloud_sdk.api import QCloudAPIClient
 from qcloud_sdk.scf.models import QCloudScfEvent
 
 # 单例

@@ -30,6 +30,6 @@ default_settings_files = [os.path.join(os.path.dirname(__file__), settings_file)
 settings = Dynaconf(
     settings_files=default_settings_files,
     environments=True,
-    envvar_prefix='QCLOUD_SDK',
+    envvar_prefix='QCLOUDSDK',
     load_dotenv=True,
 )

@@ -10,3 +10,7 @@ inputs:
   region: ap-shanghai
   memorySize: 64
   timeout: 3
+  role: SCF_EBFullAccess
+  environments:
+    variables:
+      QCLOUD_SDK_EB_DEFAULT_EVENT_BUS_ID: ${env.QCLOUD_SDK_EB_DEFAULT_EVENT_BUS_ID}

@@ -27,12 +27,11 @@ class DynaconfTestCase(unittest.TestCase):
 
     @mock.patch.dict(os.environ, {
         'TENCENTCLOUD_RUNENV': 'SCF',
-        'TENCENTCLOUD_SECRET_ID': 'fake-secret-id',
-        'TENCENTCLOUD_SECRET_KEY': 'fake-secret-key',
         'TENCENTCLOUD_UIN': 'fake-uid',
         'TENCENTCLOUD_APPID': 'fake-appid',
         'TENCENTCLOUD_REGION': 'fake-region',
         'SCF_RUNTIME': 'fake-scf-runtime',
+        'SCF_NAMESPACE': 'fake-namespace',
         'SCF_FUNCTIONNAME': 'fake-scf-function-name',
     })
     def test_load_settings_scf_runtime(self):
@@ -45,7 +44,31 @@ class DynaconfTestCase(unittest.TestCase):
         self.assertEqual('fake-scf-runtime', settings.SCF_RUNTIME)
         self.assertEqual('fake-scf-runtime', settings.scf_runtime)
         # 云函数运行环境的配置会被用户配置取代
-        self.assertEqual(os.environ.get('QCLOUD_SDK_SECRET_ID'), settings.SECRET_ID)
+        self.assertEqual(os.environ.get('QCLOUD_SDK_DEFAULT_REGION'), settings.DEFAULT_REGION)
+
+    @mock.patch.dict(os.environ, {
+        'TENCENTCLOUD_SECRETID': 'fake-secret-id',
+        'TENCENTCLOUD_SECRETKEY': 'fake-secret-key',
+        'TENCENTCLOUD_RUNENV': 'SCF',
+        'TENCENTCLOUD_UIN': 'fake-uid',
+        'TENCENTCLOUD_APPID': 'fake-appid',
+        'TENCENTCLOUD_REGION': 'fake-region',
+        'SCF_RUNTIME': 'fake-scf-runtime',
+        'SCF_NAMESPACE': 'fake-namespace',
+        'SCF_FUNCTIONNAME': 'fake-scf-function-name',
+    })
+    def test_load_settings_scf_runtime_with_role(self):
+        # 强制重载模块后重新导入
+        from qcloud_sdk import config
+        importlib.reload(config)
+        from qcloud_sdk.config import settings
+        # 云函数运行环境内置配置取代SDK默认配置
+        self.assertEqual('SCF', os.environ['TENCENTCLOUD_RUNENV'])
+        self.assertEqual('fake-scf-runtime', settings.SCF_RUNTIME)
+        self.assertEqual('fake-scf-runtime', settings.scf_runtime)
+        self.assertEqual('', settings.SESSION_TOKEN)
+        # 云函数运行环境的配置会被用户配置取代
+        self.assertEqual(os.environ.get('QCLOUD_SDK_DEFAULT_REGION'), settings.DEFAULT_REGION)
 
 
 if __name__ == '__main__':
