@@ -2,6 +2,8 @@
 
 ## [v0.2.1] - 2022-03-22 
 
+优化事件总线和云函数相关实现。
+
 ## Features
 
 云函数：
@@ -14,7 +16,7 @@
 ## Refactor
 
 通用：
-- 使用CloudEvent官方SDK重构云事件数据模型（`QCloudEvent`）
+- 使用CloudEvent官方SDK重构云事件数据模型`QCloudEvent`
 - 公开API重命名，增加QCloud。
 - 修改环境变量前缀为`QCLOUD_SDK`以避免云函数环境变量限制。
 
@@ -23,7 +25,7 @@
 
 ## [v0.2.0] - 2022-03-21
 
-云资源（CloudResource）和云事件（CloudEvent）数据模型，EB事件总线API。
+云资源`CloudResource`和云事件`CloudEvent`数据模型，EB事件总线API。
 
 ### Features
 
