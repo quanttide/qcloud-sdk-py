@@ -6,6 +6,10 @@
 
 云函数：
 - 使用运行环境内置环境变量作为SDK默认参数。
+- 增加`QCloudScfEvent`数据模型，在云函数运行环境里默认本云函数为事件源。
+
+事件总线：
+- 增加基于云函数的事件总线用例。
 
 ## Refactor
 
@@ -13,6 +17,9 @@
 - 使用CloudEvent官方SDK重构云事件数据模型（`QCloudEvent`）
 - 公开API重命名，增加QCloud。
 - 修改环境变量前缀为`QCLOUD_SDK`以避免云函数环境变量限制。
+
+云函数：
+- `QCloudScfResource`简化传参。
 
 ## [v0.2.0] - 2022-03-21
 

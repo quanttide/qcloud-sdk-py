@@ -1,9 +1,9 @@
 component: scf
-name: event-source
+name: event-target
 inputs:
   name: ${app}-${name}
   src: ./
-  description: 事件源示例
+  description: 事件目标示例
   handler: index.main_handler
   runtime: Python3.6
   namespace: default
