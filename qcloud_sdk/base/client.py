@@ -1,8 +1,7 @@
 """
-
+APIClient基本类
 """
 
-import os
 import time
 from typing import List, Optional
 
@@ -11,7 +10,6 @@ import requests
 from qcloud_sdk.base.sign import calculate_auth_string
 from qcloud_sdk.exceptions import QCloudAPIException
 from qcloud_sdk.config import settings
-
 
 
 class APIClientInitializer(object):
@@ -85,8 +83,8 @@ class BaseAPIClientMixin(object):
         else:
             endpoint = f'{service}.tencentcloudapi.com'
         # 验证服务地域
+        # 如果支持地域没有及时更新，可以通过环境变量覆盖默认参数。
         if region and supported_regions and (region not in supported_regions):
-            # TODO：对于更新服务地域以后未及时更新地域的情况，向开发者说明处理办法。
             raise ValueError(f'{region}不在支持地域列表中，请查阅文档{supported_regions_doc}确认是否在支持地域中。')
         # 公共参数
         headers = self.generate_request_headers(endpoint, service, action, params, api_version, region=region)

@@ -2,26 +2,31 @@
 云事件
 """
 
+import string
 import json
 
+from cloudevents.http import CloudEvent
 
-class QCloudEvent(object):
+
+class QCloudEvent(CloudEvent):
     """
     云事件
     Defined by EB：https://cloud.tencent.com/document/api/1359/67704#Event
-
-    TODO: 可考虑定义为dict或者defaultdict的子类型。
     """
-    def __init__(self, source: str, type: str, subject: str, data: dict):
-        self.source = source
-        self.type = type
-        self.subject = subject
-        self.data = data
+    def __init__(self, data: dict, **attributes):
+        super().__init__(attributes, data)
 
     def to_dict(self):
-        return {
-            "Source": self.source,
-            "Type": self.type,
-            "Subject": self.subject,
-            "Data": json.dumps(self.data),
-        }
+        """
+        TODO: 支持dict工厂方法；重构成更Pythonic的实现。
+        :return:
+        """
+        # attributes的key转大写
+        return_data = {}
+        for key, value in self._attributes.items():
+            # 目前API只支持这几个字段传入
+            if key in ['source', 'type', 'subject']:
+                return_data[key.capitalize()] = value
+        # data的value转json
+        return_data['Data'] = json.dumps(self.data)
+        return return_data
