@@ -2,13 +2,17 @@
 
 ## [v0.2.1] - 2022-03-22 
 
-重构云事件数据模型，重命名公开API。
+## Features
+
+云函数：
+- 使用运行环境内置环境变量作为SDK默认参数。
 
 ## Refactor
 
 通用：
 - 使用CloudEvent官方SDK重构云事件数据模型（`QCloudEvent`）
-- 公开API重命名，增加QCloud
+- 公开API重命名，增加QCloud。
+- 修改环境变量前缀为`QCLOUD_SDK`以避免云函数环境变量限制。
 
 ## [v0.2.0] - 2022-03-21
 

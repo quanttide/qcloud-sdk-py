@@ -2,6 +2,9 @@
 [default]
 DEFAULT_REGION = '@none None'
 
+# SCF云函数
+SCF_RUNTIME = '@none None'
+
 # EB事件总线
 # 默认使用DEFAULT_REGION
 EB_DEFAULT_REGION = '@none None'
