@@ -11,8 +11,6 @@ inputs:
   memorySize: 64
   timeout: 3
   role: SCF_EBFullAccess
-  environments:
+  environment:
     variables:
-      QCLOUDSDK_SECRET_ID: ${env.TENCENT_SECRET_ID}
-      QCLOUDSDK_SECRET_KEY: ${env.TENCENT_SECRET_KEY}
       QCLOUDSDK_EB_DEFAULT_EVENT_BUS_ID: ${env.QCLOUDSDK_EB_DEFAULT_EVENT_BUS_ID}

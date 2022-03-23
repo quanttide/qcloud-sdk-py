@@ -3,13 +3,24 @@
 ## Step1: 下载代码到本地
 
 ```shell
+git clone https://e.coding.net/quanttide/qtopen-python/qcloud-sdk-py.git
+```
+
+在命令行打开此用例根目录
+
+```shell
+cd <project_path>/examples/eb_with_scf
 ```
 
 ## Step2: 部署云函数到云端
 
 手动操作如下。推荐使用流水线代替手动部署。
 
-### Step2.1: 部署云函数
+### Step2.1: 创建角色
+
+为SCF创建一个可以访问EB的自定义角色，命名为`SCF_EBFullAccess`。
+
+### Step2.2: 部署云函数
 
 在`.env`文件配置如下环境变量：
 
