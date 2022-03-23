@@ -4,7 +4,6 @@
 # TODO: 暂时使用jinja语法，format找到合适表达以后移除jinja依赖
 SECRET_ID = "@jinja {{env.TENCENTCLOUD_SECRETID | default()}}"
 SECRET_KEY = "@jinja {{env.TENCENTCLOUD_SECRETKEY | default()}}"
-# 暂不使用，用以测试jinja模板语言默认值是否正确传入。
 SESSION_TOKEN = "@jinja {{env.TENCENTCLOUD_SESSIONTOKEN | default()}}"
 UIN = "@format {env[TENCENTCLOUD_UIN]}"
 APPID = "@format {env[TENCENTCLOUD_APPID]}"

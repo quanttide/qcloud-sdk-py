@@ -13,14 +13,16 @@ from qcloud_sdk.config import settings
 
 
 class APIClientInitializer(object):
-    def __init__(self, secret_id=None, secret_key=None):
+    def __init__(self, secret_id=None, secret_key=None, session_token=None):
         """
 
-        :param secret_id:
-        :param secret_key:
+        :param secret_id: 密钥ID，session_token非空时为临时密钥ID
+        :param secret_key: 密钥Key，session_token非空时为临时密钥Key
+        :param session_token: 临时密钥Session Token
         """
         self.secret_id = secret_id or settings.SECRET_ID
         self.secret_key = secret_key or settings.SECRET_KEY
+        self.session_token = session_token or settings.SESSION_TOKEN
         assert self.secret_id, "SecretID不可为空，请在实例化时传入secret_id参数或配置QCLOUD_SECRET_ID"
         assert self.secret_key, "SecretKey不可为空，请在实例化时传入secret_key参数或配置QCLOUD_SECRET_KEY"
 
@@ -52,6 +54,8 @@ class BaseAPIClientMixin(object):
         }
         if region:
             headers['X-TC-Region'] = region
+        if self.session_token:
+            headers['X-TC-Token'] = self.session_token
         return headers
 
     def parse_response_data(self, response):

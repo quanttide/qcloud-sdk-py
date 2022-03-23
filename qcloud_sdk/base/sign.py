@@ -11,11 +11,11 @@ from datetime import datetime
 
 
 # 签名方法配置，支持的签名方法为V3
-algorithm = 'TC3-HMAC-SHA256'
-http_method = "POST"
-canonical_query_string = ""
-canonical_uri = "/"
-signed_headers = "content-type;host"
+ALGORITHM = 'TC3-HMAC-SHA256'
+HTTP_METHOD = "POST"
+CANONICAL_QUERY_STRING = ""
+CANONICAL_URI = "/"
+SIGNED_HEADERS = "content-type;host"
 
 
 def calculate_hashed_payload(api_params):
@@ -23,21 +23,21 @@ def calculate_hashed_payload(api_params):
 
 
 def join_canonical_request(endpoint, api_params):
-    canonical_headers = "content-type:application/json\nhost:{endpoint}\n".format(endpoint=endpoint)
+    canonical_headers = f"content-type:application/json\nhost:{endpoint}\n"
     hashed_payload = calculate_hashed_payload(api_params)
     canonical_request = '\n'.join(
-        [http_method, canonical_uri, canonical_query_string, canonical_headers, signed_headers, hashed_payload])
+        [HTTP_METHOD, CANONICAL_URI, CANONICAL_QUERY_STRING, canonical_headers, SIGNED_HEADERS, hashed_payload])
     return canonical_request
 
 
 def gen_canonical_scope(date, service):
-    credential_scope = "{date}/{service}/tc3_request".format(date=date, service=service)
+    credential_scope = f"{date}/{service}/tc3_request"
     return credential_scope
 
 
 def join_unsigned_string(timestamp, credential_scope, canonical_request):
     hashed_canonical_request = hashlib.sha256(canonical_request.encode('utf-8')).hexdigest()
-    unsigned_string = '\n'.join([algorithm, str(timestamp), credential_scope, hashed_canonical_request])
+    unsigned_string = '\n'.join([ALGORITHM, str(timestamp), credential_scope, hashed_canonical_request])
     return unsigned_string
 
 
@@ -56,5 +56,5 @@ def calculate_auth_string(secret_id: str, secret_key: str, endpoint: str, servic
     canonical_request = join_canonical_request(endpoint, api_params)
     unsigned_string = join_unsigned_string(timestamp, credential_scope, canonical_request)
     signature = sign(secret_key, service, unsigned_string, date)
-    auth = algorithm + " " + "Credential=" + secret_id + "/" + credential_scope + ", " + "SignedHeaders=" + signed_headers + ", " + "Signature=" + signature
+    auth = ALGORITHM + " " + "Credential=" + secret_id + "/" + credential_scope + ", " + "SignedHeaders=" + SIGNED_HEADERS + ", " + "Signature=" + signature
     return auth

@@ -1,6 +1,7 @@
 # 默认配置
 [default]
 # 默认地域
+SESSION_TOKEN = '@none None'
 DEFAULT_REGION = '@none None'
 
 # SCF云函数

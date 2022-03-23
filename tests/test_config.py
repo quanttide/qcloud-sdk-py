@@ -5,7 +5,8 @@
 import os
 import unittest
 from unittest import mock
-import importlib
+
+from tests.utils import reload_settings
 
 
 class DynaconfTestCase(unittest.TestCase):
@@ -16,8 +17,7 @@ class DynaconfTestCase(unittest.TestCase):
     """
     def test_load_settings(self):
         # 强制重载模块后重新导入
-        from qcloud_sdk import config
-        importlib.reload(config)
+        reload_settings()
         from qcloud_sdk.config import settings
         # 默认配置
         self.assertTrue(hasattr(settings, 'SMS_SUPPORTED_REGIONS'))
@@ -36,8 +36,7 @@ class DynaconfTestCase(unittest.TestCase):
     })
     def test_load_settings_scf_runtime(self):
         # 强制重载模块后重新导入
-        from qcloud_sdk import config
-        importlib.reload(config)
+        reload_settings()
         from qcloud_sdk.config import settings
         # 云函数运行环境内置配置取代SDK默认配置
         self.assertEqual('SCF', os.environ['TENCENTCLOUD_RUNENV'])
@@ -47,8 +46,9 @@ class DynaconfTestCase(unittest.TestCase):
         self.assertEqual(os.environ.get('QCLOUDSDK_DEFAULT_REGION'), settings.DEFAULT_REGION)
 
     @mock.patch.dict(os.environ, {
-        'TENCENTCLOUD_SECRETID': 'fake-secret-id',
-        'TENCENTCLOUD_SECRETKEY': 'fake-secret-key',
+        'TENCENTCLOUD_SECRETID': 'fake-tmp-secret-id',
+        'TENCENTCLOUD_SECRETKEY': 'fake-tmp-secret-key',
+        'TENCENTCLOUD_SESSIONTOKEN': 'fake-tmp-session-token',
         'TENCENTCLOUD_RUNENV': 'SCF',
         'TENCENTCLOUD_UIN': 'fake-uid',
         'TENCENTCLOUD_APPID': 'fake-appid',
@@ -59,8 +59,7 @@ class DynaconfTestCase(unittest.TestCase):
     })
     def test_load_settings_scf_runtime_with_role(self):
         # 强制重载模块后重新导入
-        from qcloud_sdk import config
-        importlib.reload(config)
+        reload_settings()
         from qcloud_sdk.config import settings
         # 云函数运行环境内置配置取代SDK默认配置
         self.assertEqual('SCF', os.environ['TENCENTCLOUD_RUNENV'])
