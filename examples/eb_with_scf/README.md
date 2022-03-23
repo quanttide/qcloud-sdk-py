@@ -90,6 +90,8 @@ pip3 install -r requirements.txt -t .
 QCLOUDSDK_EB_DEFAULT_EVENT_BUS_ID=<your-event-bus-id>
 ```
 
+（备注：`serverless.yml`配置此环境的语法可能不对，请开发者暂时手动配置。）
+
 点击保存。
 
 ### Step3.3: 配置事件目标
