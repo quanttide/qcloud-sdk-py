@@ -33,7 +33,7 @@ class DynaconfTestCase(unittest.TestCase):
         'SCF_RUNTIME': 'fake-scf-runtime',
         'SCF_NAMESPACE': 'fake-namespace',
         'SCF_FUNCTIONNAME': 'fake-scf-function-name',
-    })
+    }, clear=True)
     def test_load_settings_scf_runtime(self):
         # 强制重载模块后重新导入
         reload_settings()
@@ -56,7 +56,7 @@ class DynaconfTestCase(unittest.TestCase):
         'SCF_RUNTIME': 'fake-scf-runtime',
         'SCF_NAMESPACE': 'fake-namespace',
         'SCF_FUNCTIONNAME': 'fake-scf-function-name',
-    })
+    }, clear=True)
     def test_load_settings_scf_runtime_with_role(self):
         # 强制重载模块后重新导入
         reload_settings()
@@ -65,7 +65,7 @@ class DynaconfTestCase(unittest.TestCase):
         self.assertEqual('SCF', os.environ['TENCENTCLOUD_RUNENV'])
         self.assertEqual('fake-scf-runtime', settings.SCF_RUNTIME)
         self.assertEqual('fake-scf-runtime', settings.scf_runtime)
-        self.assertEqual('', settings.SESSION_TOKEN)
+        self.assertEqual('fake-tmp-session-token', settings.SESSION_TOKEN)
         # 云函数运行环境的配置会被用户配置取代
         self.assertEqual(os.environ.get('QCLOUDSDK_DEFAULT_REGION'), settings.DEFAULT_REGION)
 
