@@ -20,7 +20,7 @@ class CosAPIMixin(object):
             host = f'cos.{region}.myqcloud.com'
         else:
             host = 'service.cos.myqcloud.com'
-        return self.request_cos_api(method='GET', host=host)['ListAllMyBucketsResult']
+        return self.request_cos_api(method='GET', host=host, path='/', query_params={}, headers={})['ListAllMyBucketsResult']
 
     # ----- 存储桶API -----
     def list_buckets(self, region=None):

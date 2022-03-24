@@ -44,8 +44,16 @@ def join_http_params(params):
     - 步骤4：生成HeaderList和HttpHeaders
     :return:
     """
-    encoded_keys = ';'.join(sorted([quote_plus(param.lower()) for param in params.keys()]))
-    encoded_params = urlencode(dict(sorted(params.items())))
+    # 遍历 HTTP 请求参数，生成 key 到 value 的映射 Map 及 key 的列表 KeyList：
+    #   - key 使用 UrlEncode 编码并转换为小写形式。
+    #   - value 使用 UrlEncode 编码。若无 value 的参数，则认为 value 为空字符串。例如请求路径为/?acl，则认为是/?acl=。
+    params = {quote_plus(str(key).lower()): quote_plus(str(value)) for key, value in params.items()}
+    # 将 KeyList 按照字典序排序。
+    params = dict(sorted(params.items()))
+    # 按照 KeyList 的顺序拼接 KeyList 中的每一项，格式为key1;key2;key3，即为 UrlParamList。
+    encoded_keys = ';'.join(params.keys())
+    # 按照 KeyList 的顺序拼接 Map 中的每一个键值对，格式为key1=value1&key2=value2&key3=value3，即为 HttpParameters。
+    encoded_params = '&'.join([f'{key}={value}' for key, value in params.items()])
     return encoded_keys, encoded_params
 
 
