@@ -9,6 +9,7 @@
 对象存储：
 - 增加对象存储基本客户端Mixin类`qcloud_sdk.cos.client.CosBaseAPIClientMixin`及通用API`request_cos_api`。
 - 增加对象存储GET Service(List Buckets) API、GET Bucket(List Objects) API。
+- 增加high-level API 列举存储桶下所有对象`list_all_objects`。
 - 增加对象存储签名算法`qcloud_sdk.cos.sign`模块。
 
 
