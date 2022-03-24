@@ -1,5 +1,22 @@
 # CHANGELOG
 
+## [v0.2.3] - 2022-03-24
+
+增加投递单个事件API。
+
+## Features
+
+通用：
+- 增加云事件列表数据模型`QCloudEventList`。
+
+事件总线：
+- 增加投递单个事件API`put_event`。
+
+## Refactored
+
+事件总线：
+- 使用`QCloudEventList`重构投递事件`put_events`内部实现。
+
 ## [v0.2.2] - 2022-03-23
 
 增加临时密钥支持
