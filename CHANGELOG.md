@@ -1,5 +1,17 @@
 # CHANGELOG
 
+## [v0.3.0] - 2022-03-25
+
+增加对象存储API。
+
+## Features
+
+对象存储：
+- 增加对象存储基本客户端Mixin类`qcloud_sdk.cos.client.CosBaseAPIClientMixin`及通用API`request_cos_api`。
+- 增加对象存储GET Service(List Buckets) API、GET Bucket(List Objects) API。
+- 增加对象存储签名算法`qcloud_sdk.cos.sign`模块。
+
+
 ## [v0.2.3] - 2022-03-24
 
 增加投递单个事件API。
@@ -17,6 +29,7 @@
 事件总线：
 - 使用`QCloudEventList`重构投递事件`put_events`内部实现。
 
+
 ## [v0.2.2] - 2022-03-23
 
 增加临时密钥支持
@@ -28,6 +41,7 @@
 
 单元测试：
 - 增加测试工具函数`reload_settings`。
+
 
 ## [v0.2.1] - 2022-03-22 
 
@@ -55,6 +69,7 @@
 ## Bugfix
 
 - setup.cfg增加package_data设置、修复package.find的exclude选项。
+
 
 ## [v0.2.0] - 2022-03-21
 
