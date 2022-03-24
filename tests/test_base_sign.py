@@ -31,8 +31,8 @@ class SignatureTestCase(unittest.TestCase):
         unsigned_string = join_unsigned_string(self.timestamp, credential_scope, self.official_canonical_request)
         self.assertEqual(unsigned_string, self.official_unsigned_string)
 
-    def test_sign(self):
-        signature = sign(self.secret_key, self.service, self.official_unsigned_string, self.date)
+    def test_calculate_signature(self):
+        signature = calculate_signature(self.secret_key, self.service, self.official_unsigned_string, self.date)
         self.assertEqual(signature, self.official_sign)
 
     def test_join_auth(self):

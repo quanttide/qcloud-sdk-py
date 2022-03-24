@@ -41,7 +41,7 @@ def join_unsigned_string(timestamp, credential_scope, canonical_request):
     return unsigned_string
 
 
-def sign(secret_key, service, unsigned_string, date):
+def calculate_signature(secret_key, service, unsigned_string, date):
     sign_func = lambda key, msg: hmac.new(key, msg.encode('utf-8'), hashlib.sha256).digest()
     secret_date = sign_func(("TC3" + secret_key).encode('utf-8'), date)
     secret_service = sign_func(secret_date, service)
@@ -55,6 +55,6 @@ def calculate_auth_string(secret_id: str, secret_key: str, endpoint: str, servic
     credential_scope = gen_canonical_scope(date, service)
     canonical_request = join_canonical_request(endpoint, api_params)
     unsigned_string = join_unsigned_string(timestamp, credential_scope, canonical_request)
-    signature = sign(secret_key, service, unsigned_string, date)
+    signature = calculate_signature(secret_key, service, unsigned_string, date)
     auth = ALGORITHM + " " + "Credential=" + secret_id + "/" + credential_scope + ", " + "SignedHeaders=" + SIGNED_HEADERS + ", " + "Signature=" + signature
     return auth

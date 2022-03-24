@@ -3,3 +3,4 @@
 """
 
 from .resources import QCloudResource
+from .events import QCloudEvent
