@@ -1,10 +1,14 @@
 # 默认配置
 [default]
-# 默认地域
+# ----- 基本设置 -----
 SESSION_TOKEN = '@none None'
+# 默认地域
 DEFAULT_REGION = '@none None'
 
-# SCF云函数
+# ----- COS对象存储 -----
+COS_DEFAULT_PREFIX = ''
+
+# ----- SCF云函数 -----
 # SCF运行环境
 SCF_RUNTIME = '@none None'
 # SCF默认命名空间，默认为default
@@ -12,7 +16,7 @@ SCF_DEFAULT_NAMESPACE = 'default'
 # SCF默认函数名称
 SCF_DEFAULT_FUNCTION_NAME = '@none None'
 
-# EB事件总线
+# ----- EB事件总线 -----
 # EB默认地域，默认使用DEFAULT_REGION
 EB_DEFAULT_REGION = '@none None'
 # EB支持地域
@@ -21,7 +25,7 @@ EB_SUPPORTED_REGIONS = ['ap-beijing', 'ap-chengdu', 'ap-chongqing', 'ap-guangzho
 # EB支持地域的文档
 EB_SUPPORTED_REGIONS_DOC = 'https://cloud.tencent.com/document/product/1359/67707#.E5.9C.B0.E5.9F.9F.E5.88.97.E8.A1.A8'
 
-# SMS短信服务
+# ----- SMS短信服务 -----
 # SMS支持地域
 SMS_SUPPORTED_REGIONS = ['ap-beijing', 'ap-guangzhou', 'ap-nanjing']
 # SMS支持地域的文档
