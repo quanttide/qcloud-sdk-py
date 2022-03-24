@@ -1,6 +1,7 @@
 import unittest
 
 from qcloud_sdk.config import settings
+from qcloud_sdk.models.events import QCloudEvent, QCloudEventList
 from qcloud_sdk.scf.models import QCloudScfResource, QCloudScfEvent
 
 
@@ -18,13 +19,24 @@ class TestDataMixin(object):
         }
 
 
-class CloudEventTestCase(TestDataMixin, unittest.TestCase):
+class QCloudEventTestCase(TestDataMixin, unittest.TestCase):
     def test_init(self):
         event = QCloudScfEvent(**self.event_raw)
 
-    def test_to_dict(self):
+    def test_to_api_params(self):
         event = QCloudScfEvent(**self.event_raw)
-        event_for_api = event.to_dict()
+        event_api_params_format = event.to_api_params()
+
+
+class QCloudEventListTestCase(TestDataMixin, unittest.TestCase):
+    def test_init(self):
+        event = QCloudScfEvent(**self.event_raw)
+        event_list = QCloudEventList([event])
+
+    def test_to_api_params(self):
+        event = QCloudScfEvent(**self.event_raw)
+        event_list = QCloudEventList([event])
+        event_list.to_api_params()
 
 
 if __name__ == '__main__':

@@ -3,7 +3,7 @@ import unittest
 from qcloud_sdk.scf.models import QCloudScfEvent
 
 from tests.client import APIClientTestCase
-from tests.test_eb_models import TestDataMixin
+from tests.test_models_events import TestDataMixin
 
 
 class EbAPITestCase(APIClientTestCase, TestDataMixin):
@@ -22,10 +22,13 @@ class EbAPITestCase(APIClientTestCase, TestDataMixin):
         # print(data)
 
     def test_put_events(self):
-        event_list = [self.event.to_dict()]
+        event_list = [self.event]
         data = self.client.put_events(event_list=event_list)
         self.assertTrue(data)
-        # print(data)
+
+    def test_put_event(self):
+        data = self.client.put_event(event=self.event)
+        self.assertTrue(data)
 
     # ----- 事件规则 -----
     @unittest.skip('TODO')

@@ -2,8 +2,9 @@
 腾讯云事件总线（EB）云API
 """
 
-from typing import Optional
+from typing import Optional, List
 
+from qcloud_sdk.models.events import QCloudEvent, QCloudEventList
 from qcloud_sdk.config import settings
 
 
@@ -56,9 +57,12 @@ class EbAPIMixin(object):
         }
         return self.request_eb_api(action='CreateEventBus', params=params, region=region, api_region=api_region)
 
-    def put_events(self, event_list, event_bus_id=None, region=None, api_region: Optional[str] = None):
+    def put_events(self, event_list: List[QCloudEvent], event_bus_id=None, region=None, api_region: Optional[str] = None):
         """
         投递事件，详见：https://cloud.tencent.com/document/product/1359/68465
+
+        TODO: 支持直接传入原始dict格式的event。
+
         :param region:
         :param event_bus_id:
         :param event_list:
@@ -67,9 +71,21 @@ class EbAPIMixin(object):
         """
         params = {
             'EventBusId': event_bus_id or settings.EB_DEFAULT_EVENT_BUS_ID,
-            'EventList': event_list,
+            'EventList': QCloudEventList(event_list).to_api_params(),
         }
         return self.request_eb_api(action='PutEvents', region=region, params=params, api_region=api_region)
+
+    def put_event(self, event: QCloudEvent, **kwargs):
+        """
+        （High-level API）投递单个事件。
+
+        TODO: 支持直接传入原始dict格式的event。
+
+        :param event:
+        :param kwargs:
+        :return:
+        """
+        return self.put_events(event_list=[event], **kwargs)
 
     # ----- 事件规则 -----
     def create_event_rule(self, rule_name: str, event_bus_id=None, enable=True, description=None, **kwargs):

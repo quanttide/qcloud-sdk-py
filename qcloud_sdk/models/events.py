@@ -2,8 +2,8 @@
 云事件
 """
 
-import string
 import json
+from collections import UserList
 
 from cloudevents.http import CloudEvent
 
@@ -16,7 +16,7 @@ class QCloudEvent(CloudEvent):
     def __init__(self, data: dict, **attributes):
         super().__init__(attributes, data)
 
-    def to_dict(self):
+    def to_api_params(self):
         """
         TODO: 支持dict工厂方法；重构成更Pythonic的实现。
         :return:
@@ -30,3 +30,11 @@ class QCloudEvent(CloudEvent):
         # data的value转json
         return_data['Data'] = json.dumps(self.data)
         return return_data
+
+
+class QCloudEventList(UserList):
+    """
+    云事件列表
+    """
+    def to_api_params(self):
+        return [event.to_api_params() for event in self]

@@ -9,7 +9,7 @@ from qcloud_sdk.scf.models import QCloudScfEvent
 def put_events():
     event = QCloudScfEvent(data={'task_id': '1'})
     client = QCloudAPIClient()
-    client.put_events(event_list=[event.to_dict()])
+    client.put_event(event=event)
 
 
 def main_handler(event, context):
