@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 
 import json
+import shutil
+
+import urllib3
 
 from qcloud_sdk.config import settings
 
@@ -10,12 +13,12 @@ class CosAPIMixin(object):
     对象存储API
     """
     # ----- 通用API -----
-    def request_bucket_api(self, method, path, query_params, headers, appid=None, region=None, bucket=None):
+    def request_bucket_api(self, method, path, query_params, headers, appid=None, region=None, bucket=None, stream=False):
         appid = appid or settings.APPID
         region = region or settings.COS_DEFAULT_REGION or settings.DEFAULT_REGION
         bucket = bucket or settings.COS_DEFAULT_BUCKET
         host = f'{bucket}-{appid}.cos.{region}.myqcloud.com'
-        return self.request_cos_api(method=method, host=host, path=path, query_params=query_params, headers=headers)
+        return self.request_cos_api(method=method, host=host, path=path, query_params=query_params, headers=headers, stream=stream)
 
     # ----- Service API -----
     def get_cos_service(self, region=None):
@@ -92,3 +95,47 @@ class CosAPIMixin(object):
                 # 当需要继续请求后续条目时，将该节点的值作为下一次请求的marker参数传入
                 marker = data['NextMarker']
         return object_list
+
+    def get_object(self, object_key: str, bucket=None, region=None, appid=None) -> urllib3.response.HTTPResponse:
+        """
+
+        https://cloud.tencent.com/document/product/436/7753
+
+        TODO:
+          - 增加COS参数和requests参数。
+
+        :param object_key: 对象Key
+        :param file_path: 目标文件路径
+        :param bucket:
+        :param region:
+        :param appid:
+        :return: requests.Response.raw实例
+        """
+        # 处理参数
+        # TODO: 增加API请求参数
+        query_params = {}
+        # TODO：增加API请求头
+        headers = {}
+        # 发请求
+        return self.request_bucket_api('GET', path=f'/{object_key}', query_params=query_params, headers=headers,
+                                       bucket=bucket, region=region, appid=appid, stream=True)
+
+    def get_object_to_file(self, object_key, file_path, bucket=None, region=None, appid=None, chunk_size=1024):
+        """
+
+        Ref:
+          - https://urllib3.readthedocs.io/en/latest/advanced-usage.html#streaming-and-i-o
+          - https://stackoverflow.com/questions/13137817/how-to-download-image-using-requests/13137873#13137873
+
+        :param object_key:
+        :param file_path:
+        :param bucket:
+        :param region:
+        :param appid:
+        :param chunk_size:
+        :return:
+        """
+        raw = self.get_object(object_key=object_key, bucket=bucket, region=region, appid=appid)
+        with open(file_path, 'wb') as f:
+            for chunk in raw.stream(chunk_size):
+                f.write(chunk)

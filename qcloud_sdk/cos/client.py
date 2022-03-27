@@ -47,10 +47,15 @@ class CosBaseAPIClientMixin(object):
     def parse_cos_response_data(self, raw_xml):
         return xmltodict.parse(raw_xml)
 
-    def request_cos_api(self, method, host, path, query_params, headers):
+    def request_cos_api(self, method, host, path, query_params, headers, stream=False):
         url = 'https://' + host + path
         headers = self.generate_cos_request_headers(method, host, path, query_params, headers)
-        r = requests.request(method=method, url=url, params=query_params, headers=headers)
+        r = requests.request(method=method, url=url, params=query_params, headers=headers, stream=stream)
+        # 原始文件流
+        # TODO: 增加POST等方法对stream的支持。
+        if stream:
+            return r.raw
+        # 解析后的COS定义的XML格式数据
         return self.parse_cos_response_data(r.content)
 
 

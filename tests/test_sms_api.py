@@ -12,6 +12,7 @@ class SmsAPITestCase(APIClientTestCase):
     def setUp(self):
         self.session_context = '123456'
 
+    @unittest.skipUnless(settings.TEST_ALL, '避免发送真实短信验证码')
     def test_send_sms(self):
         data = self.client.send_sms(
             phone_number_list=[settings.SMS_TEST_PHONE_NUMBER],
@@ -23,8 +24,8 @@ class SmsAPITestCase(APIClientTestCase):
         )
         self.assertTrue(data)
 
+    @unittest.skipUnless(settings.TEST_ALL, '避免发送真实短信验证码')
     def test_send_sms_to_single_user(self):
-
         data = self.client.send_sms_to_single_user(
             phone_number=settings.SMS_TEST_PHONE_NUMBER,
             app_id=settings.SMS_SDK_APP_ID,
