@@ -15,6 +15,11 @@ from qcloud_sdk.config import settings
 class APIClientInitializer(object):
     def __init__(self, secret_id=None, secret_key=None, session_token=None):
         """
+        APIClient初始化器
+
+        TODO：
+          - 优化云函数未配置Role时报错不友好的问题。
+          - 优化云函数作为全局变量（单例模式）下settings无法读入的问题，可参考serverless-db-sdk。
 
         :param secret_id: 密钥ID，session_token非空时为临时密钥ID
         :param secret_key: 密钥Key，session_token非空时为临时密钥Key
@@ -23,8 +28,8 @@ class APIClientInitializer(object):
         self.secret_id = secret_id or settings.SECRET_ID
         self.secret_key = secret_key or settings.SECRET_KEY
         self.session_token = session_token or settings.SESSION_TOKEN
-        assert self.secret_id, "SecretID不可为空，请在实例化时传入secret_id参数或配置QCLOUD_SECRET_ID"
-        assert self.secret_key, "SecretKey不可为空，请在实例化时传入secret_key参数或配置QCLOUD_SECRET_KEY"
+        assert self.secret_id, "SecretID不可为空，请在实例化时传入secret_id参数或配置QCLOUDSDK_SECRET_ID"
+        assert self.secret_key, "SecretKey不可为空，请在实例化时传入secret_key参数或配置QCLOUDSDK_SECRET_KEY"
 
 
 class BaseAPIClientMixin(object):

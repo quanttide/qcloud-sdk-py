@@ -1,8 +1,8 @@
-# 腾讯云 Python SDK 
+# qcloud-sdk-py
 
 ## 简介
 
-量潮科技出品的腾讯云 Python SDK for Humans。
+量潮科技出品的腾讯云Python服务端SDK。
 
 ## 安装
 
@@ -10,10 +10,9 @@
 pip install qcloud-sdk-py -i https://quanttide-pypi.pkg.coding.net/qtopen-python/qcloud-sdk-py/simple
 ```
 
-
 ## 使用
 
-假设在环境变量中配置`QCLOUD_SECRET_ID`和`QCLOUD_SECRET_KEY`，未配置可以通过APIClient传入。
+假设在环境变量中配置`QCLOUDSDK_SECRET_ID`和`QCLOUDSDK_SECRET_KEY`，未配置可以通过APIClient传入。
 ```python
 # 导入模块
 from qcloud_sdk import QCloudAPIClient
@@ -35,19 +34,27 @@ from qcloud_sdk import QCloudAPIClient
 client = QCloudAPIClient()
 client.request_api()
 
-# 事件总线API
+# COS对象存储API 
+client.request_cos_api()
+client.list_buckets()
+client.list_objects()
+client.list_all_objects()
+
+# EB事件总线API
 client.request_eb_api()
 client.list_event_buses()
 client.put_events()
 
-# 短信服务
+# SMS短信服务API
 client.request_sms_api()
 client.send_sms_api()
 
+# 配置
+from qcloud_sdk.config import settings
+
 # 数据模型
-from qcloud_sdk.models import QCloudResource
-from qcloud_sdk.scf.models import QCloudScfResource
-from qcloud_sdk.eb.models import QCloudEvent
+from qcloud_sdk.models import QCloudResource, QCloudEvent
+from qcloud_sdk.scf.models import QCloudScfResource, QCloudScfEvent
 
 # 异常类
 from qcloud_sdk.exceptions import QCloudAPIException
