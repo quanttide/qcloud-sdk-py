@@ -7,6 +7,7 @@
 ## Features
 
 对象存储：
+- 增加`get_object`和`get_object_to_file`方法。
 
 单元测试：
 - 增加`QCLOUSDK_TEST_ALL`环境变量控制消耗云资源计费的单元测试。
