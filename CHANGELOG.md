@@ -1,5 +1,19 @@
 # CHANGELOG
 
+## [v0.4.0] - 2022-04-
+
+增加云函数API和日志服务API。
+
+## Features
+
+云函数：
+- 基本API`request_scf_api`。
+
+日志服务：
+- 基本API`request_cls_api`。
+- 日志检索API`search_log`。
+
+
 ## [v0.3.1] - 2022-03-28 
 
 对象存储增加下载对象API。
