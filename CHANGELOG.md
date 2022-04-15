@@ -2,7 +2,7 @@
 
 ## [v0.4.0] - 2022-04-
 
-增加云函数API和日志服务API。
+增加云函数API、日志服务API，事件总线增加事件连接器API。
 
 ## Features
 
@@ -13,6 +13,22 @@
 - 基本API`request_cls_api`。
 - 日志检索API`search_log`。
 
+事件总线：
+- 创建事件连接器API`create_event_connection`。
+
+## [v0.3.2] - 2022-04-16
+
+修复事件总线API异常。
+
+### Features
+
+事件总线：
+- 增加一次性所有投递事件的high-level API `put_all_events`
+
+### Bugfix
+
+事件总线：
+- 事件投递API增加验证事件参数上限为10个。
 
 ## [v0.3.1] - 2022-03-28 
 

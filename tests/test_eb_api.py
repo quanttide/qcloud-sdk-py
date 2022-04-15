@@ -26,6 +26,11 @@ class EbAPITestCase(APIClientTestCase, TestDataMixin):
         data = self.client.put_events(event_list=event_list)
         self.assertTrue(data)
 
+    def test_put_all_events(self):
+        event_list = [self.event] * 22
+        data = self.client.put_all_events(event_list=event_list)
+        self.assertTrue(data)
+
     def test_put_event(self):
         data = self.client.put_event(event=self.event)
         self.assertTrue(data)

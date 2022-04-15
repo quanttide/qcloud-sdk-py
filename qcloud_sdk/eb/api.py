@@ -69,11 +69,22 @@ class EbAPIMixin(object):
         :param api_region:
         :return:
         """
+        if len(event_list) > 10:
+            raise ValueError('投递事件API每次最多支持投递10条事件')
         params = {
             'EventBusId': event_bus_id or settings.EB_DEFAULT_EVENT_BUS_ID,
             'EventList': QCloudEventList(event_list).to_api_params(),
         }
         return self.request_eb_api(action='PutEvents', region=region, params=params, api_region=api_region)
+
+    def put_all_events(self, event_list: List[QCloudEvent], event_bus_id=None, region=None, api_region: Optional[str] = None):
+        if len(event_list) > 10:
+            # 拆分成10个一组
+            events_chunk = [event_list[i:i + 10] for i in range(0, len(event_list), 10)]
+            # 分别运行
+            return [self.put_events(events, event_bus_id, region, api_region) for events in events_chunk]
+        # 正常调用
+        return self.put_events(event_list, event_bus_id, region, api_region)
 
     def put_event(self, event: QCloudEvent, **kwargs):
         """
@@ -115,3 +126,7 @@ class EbAPIMixin(object):
             'RuleId': rule_id,
         }
         return self.request_eb_api(action='CreateTarget', region=region, params=params, api_region=api_region)
+
+    # ----- 事件连接器 -----
+    def create_event_connection(self):
+        return self.request_eb_api(action='CreateConnection',)
