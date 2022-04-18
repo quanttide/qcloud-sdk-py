@@ -12,3 +12,6 @@ dist/
 
 # Python库需要兼容多版本
 .python-version
+
+# 测试数据
+tests/data

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
+import os
 import json
-import shutil
 
 import urllib3
 
@@ -13,12 +13,36 @@ class CosAPIMixin(object):
     对象存储API
     """
     # ----- 通用API -----
-    def request_bucket_api(self, method, path, query_params, headers, appid=None, region=None, bucket=None, stream=False):
+    def request_cos_bucket_api(self, method, path, query_params, headers, appid=None, region=None, bucket=None, stream=False):
+        """
+        对象存储存储桶通用API
+
+        TODO：
+          - 合并验证值的异常处理，一次抛出所有异常，以方便开发者一次排查一次修正。
+
+        :param method:
+        :param path:
+        :param query_params:
+        :param headers:
+        :param appid:
+        :param region:
+        :param bucket:
+        :param stream:
+        :return:
+        """
         appid = appid or settings.APPID
+        if not appid:
+            raise ValueError('APPID不可以为空')
         region = region or settings.COS_DEFAULT_REGION or settings.DEFAULT_REGION
+        if not region:
+            raise ValueError('地域不可以为空')
         bucket = bucket or settings.COS_DEFAULT_BUCKET
+        if not bucket:
+            raise ValueError('存储桶不可以为空')
         host = f'{bucket}-{appid}.cos.{region}.myqcloud.com'
-        return self.request_cos_api(method=method, host=host, path=path, query_params=query_params, headers=headers, stream=stream)
+        response = self.request_cos_api(method=method, host=host, path=path, query_params=query_params, headers=headers, stream=stream)
+        # TODO: 分类处理文件和XML数据
+        return response
 
     # ----- Service API -----
     def get_cos_service(self, region=None):
@@ -26,7 +50,8 @@ class CosAPIMixin(object):
             host = f'cos.{region}.myqcloud.com'
         else:
             host = 'service.cos.myqcloud.com'
-        return self.request_cos_api(method='GET', host=host, path='/', query_params={}, headers={})['ListAllMyBucketsResult']
+        response = self.request_cos_api(method='GET', host=host, path='/', query_params={}, headers={})
+        return response.data['ListAllMyBucketsResult']
 
     # ----- 存储桶API -----
     def list_buckets(self, **kwargs):
@@ -53,8 +78,9 @@ class CosAPIMixin(object):
         prefix = prefix or settings.COS_DEFAULT_PREFIX
         query_params = {'prefix': prefix, 'delimiter': delimiter,
                         'marker': marker, 'max-keys': max_keys}
-        return self.request_bucket_api(method='GET', path='/', query_params=query_params,
-                                       headers={}, region=region, bucket=bucket)['ListBucketResult']
+        response = self.request_cos_bucket_api(method='GET', path='/', query_params=query_params,
+                                               headers={}, region=region, bucket=bucket)
+        return response.data['ListBucketResult']
 
     # ----- 对象API -----
     def list_objects(self, **kwargs):
@@ -69,7 +95,7 @@ class CosAPIMixin(object):
 
     def list_all_objects(self, **kwargs) -> list:
         """
-        (high-level API) 获取存储桶下所有对象。
+        (custom API) 获取存储桶下所有对象。
 
         基于`list_objects`封装。
 
@@ -96,7 +122,24 @@ class CosAPIMixin(object):
                 marker = data['NextMarker']
         return object_list
 
-    def get_object(self, object_key: str, bucket=None, region=None, appid=None) -> urllib3.response.HTTPResponse:
+    def head_object(self, object_key: str, bucket=None, region=None, appid=None):
+        """
+
+        :param object_key: 对象键
+        :param bucket: 存储桶，默认为COS_DEFAULT_BUCKET
+        :param region: 地域，默认为COS_DEFAULT_REGION
+        :param appid: APPID，默认为APPID
+        :return:
+        """
+        # TODO
+        query_params = {}
+        headers = {}
+        response = self.request_cos_bucket_api(method='HEAD', path=f'/{object_key}', query_params=query_params, headers=headers,
+                                               bucket=bucket, region=region, appid=appid)
+        return response.headers
+
+    def get_object(self, object_key: str, bucket=None, region=None, appid=None,
+                   range_begin=None, range_end=None) -> urllib3.response.HTTPResponse:
         """
 
         https://cloud.tencent.com/document/product/436/7753
@@ -105,10 +148,11 @@ class CosAPIMixin(object):
           - 增加COS参数和requests参数。
 
         :param object_key: 对象Key
-        :param file_path: 目标文件路径
         :param bucket:
         :param region:
         :param appid:
+        :param range_begin: 开始字节，包含
+        :param range_end: 结束字节，包含
         :return: requests.Response.raw实例
         """
         # 处理参数
@@ -116,12 +160,17 @@ class CosAPIMixin(object):
         query_params = {}
         # TODO：增加API请求头
         headers = {}
+        if range_begin and range_end:
+            headers['Range'] = f'bytes={range_begin}-{range_end}'
         # 发请求
-        return self.request_bucket_api('GET', path=f'/{object_key}', query_params=query_params, headers=headers,
-                                       bucket=bucket, region=region, appid=appid, stream=True)
+        response = self.request_cos_bucket_api('GET', path=f'/{object_key}', query_params=query_params, headers=headers,
+                                               bucket=bucket, region=region, appid=appid, stream=True)
+        return response
 
-    def get_object_to_file(self, object_key, file_path, bucket=None, region=None, appid=None, chunk_size=1024):
+    def download_object_to_local_file(self, object_key, file_path, bucket=None, region=None, appid=None,
+                                      request_chunk_size=1024*1024, write_chunk_size=1024):
         """
+        (custom API) 下载对象为本地文件
 
         Ref:
           - https://urllib3.readthedocs.io/en/latest/advanced-usage.html#streaming-and-i-o
@@ -132,10 +181,19 @@ class CosAPIMixin(object):
         :param bucket:
         :param region:
         :param appid:
-        :param chunk_size:
+        :param request_chunk_size: 网络请求大小，默认为1M
+        :param write_chunk_size: 写入文件大小，默认为1k
         :return:
         """
-        raw = self.get_object(object_key=object_key, bucket=bucket, region=region, appid=appid)
-        with open(file_path, 'wb') as f:
-            for chunk in raw.stream(chunk_size):
-                f.write(chunk)
+        headers = self.head_object(object_key=object_key, bucket=bucket, region=region, appid=appid)
+        content_length = int(headers['content-length'])
+        request_ranges = [(i, min(i-1+request_chunk_size, content_length)) for i in range(0, content_length, request_chunk_size)]
+        # 清空文件
+        if os.path.exists(file_path):
+            os.remove(file_path)
+        # 分块下载文件
+        for range_begin, range_end in request_ranges:
+            response = self.get_object(object_key=object_key, bucket=bucket, region=region, appid=appid,
+                                       range_begin=range_begin, range_end=range_end)
+            # 分块保存文件
+            response.save_object_to_local_file(file_path, mode='ab', chunk_size=write_chunk_size)

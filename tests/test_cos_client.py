@@ -17,8 +17,8 @@ class CosAPITestCase(APIClientTestCase):
         self.assertTrue('Authorization' in headers)
 
     def test_request_cos_api(self):
-        data = self.client.request_cos_api(self.method, self.host, self.path, self.query_params, self.headers)
-        self.assertTrue(data)
+        response = self.client.request_cos_api(self.method, self.host, self.path, self.query_params, self.headers)
+        self.assertTrue(response.data)
 
 
 if __name__ == '__main__':
