@@ -16,6 +16,28 @@
 事件总线：
 - 创建事件连接器API`create_event_connection`。
 
+## [v0.3.3] - 2022-04-18 
+
+重构对象存储API。
+
+### Features
+
+对象存储：
+- 增加数据模型`CosResponseData`。
+- 增加HEAD Object API `head_object`。
+- 增加自定义下载对象API`download_object_to_file`。
+
+### Refactored 
+
+对象存储：
+- 重构底层API `request_cos_api`、`request_cos_bucket_api`。
+- 重构GET Object API `get_object`。
+
+### Removed
+
+对象存储：
+- （不兼容更新）删除原下载对象API`get_object_to_file`。
+
 ## [v0.3.2] - 2022-04-16
 
 修复事件总线API异常。
