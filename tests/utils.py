@@ -9,3 +9,5 @@ def reload_settings() -> None:
     """
     from qcloud_sdk import config
     importlib.reload(config)
+
+

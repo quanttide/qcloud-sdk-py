@@ -2,10 +2,12 @@
 
 import os
 import json
+import hashlib
 
 import urllib3
 
 from qcloud_sdk.config import settings
+from qcloud_sdk.utils.hashlib import calculate_file_md5
 
 
 class CosAPIMixin(object):
@@ -167,8 +169,8 @@ class CosAPIMixin(object):
                                                bucket=bucket, region=region, appid=appid, stream=True)
         return response
 
-    def download_object_to_local_file(self, object_key, file_path, bucket=None, region=None, appid=None,
-                                      request_chunk_size=1024*1024, write_chunk_size=1024):
+    def download_object_to_file(self, object_key, file_path, bucket=None, region=None, appid=None,
+                                request_chunk_size=1024*1024, file_chunk_size=1024) -> None:
         """
         (custom API) 下载对象为本地文件
 
@@ -182,7 +184,7 @@ class CosAPIMixin(object):
         :param region:
         :param appid:
         :param request_chunk_size: 网络请求大小，默认为1M
-        :param write_chunk_size: 写入文件大小，默认为1k
+        :param file_chunk_size: 写入文件大小，默认为1k
         :return:
         """
         headers = self.head_object(object_key=object_key, bucket=bucket, region=region, appid=appid)
@@ -196,4 +198,7 @@ class CosAPIMixin(object):
             response = self.get_object(object_key=object_key, bucket=bucket, region=region, appid=appid,
                                        range_begin=range_begin, range_end=range_end)
             # 分块保存文件
-            response.save_object_to_local_file(file_path, mode='ab', chunk_size=write_chunk_size)
+            response.save_object_to_local_file(file_path, mode='ab', chunk_size=file_chunk_size)
+        # 验证ETag是否和本地文件MD5相等
+        # TODO: 支持加密文件验证
+        assert headers['etag'] != calculate_file_md5(file_path, file_chunk_size), 'ETag校验不通过'

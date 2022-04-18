@@ -6,6 +6,7 @@ import unittest
 import os
 
 from qcloud_sdk.config import settings
+from qcloud_sdk.utils.hashlib import calculate_file_md5
 
 from tests.client import APIClientTestCase
 
@@ -48,7 +49,7 @@ class CosAPITestCase(APIClientTestCase):
         response = self.client.get_object(object_key=self.object_key, range_begin=0, range_end=content_length-1)
         self.assertTrue(content_length, response.headers['content-length'])
 
-    def test_download_object_to_local_file(self):
+    def test_download_object_to_file(self):
         """
         测试报告：
          - 云端文件大小：1.59M
@@ -56,8 +57,10 @@ class CosAPITestCase(APIClientTestCase):
          - 本地原始文件大小：1.7M
          - 运行时间：1.415s
         """
-        self.client.download_object_to_local_file(object_key=self.object_key, file_path=self.object_file_path)
+        self.client.download_object_to_file(object_key=self.object_key, file_path=self.object_file_path)
         self.assertTrue(os.path.exists(self.object_file_path))
+        # 原始文件和下载文件是不一样的，可能是对象存储压缩处理了原始文件
+        self.assertNotEqual(calculate_file_md5(self.object_raw_file_path), calculate_file_md5(self.object_file_path))
 
 
 if __name__ == '__main__':

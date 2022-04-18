@@ -50,21 +50,3 @@ class CosResponseData(object):
             for chunk in self.response.iter_content(chunk_size=chunk_size):
                 fd.write(chunk)
 
-    def validate_etag(self, file_path, chunk_size=1024):
-        """
-        验证文件的ETag是否与本地文件一致。仅可以在非分块上传和非加密的情况下使用。
-
-        TODO：支持分块上传或加密模式的ETAG验证。
-
-        :param file_path:
-        :param chunk_size:
-        :return:
-        """
-        with open(file_path, 'rb') as fp:
-            md5 = hashlib.md5()
-            chunk = fp.read(chunk_size)
-            while chunk:
-                md5.update(chunk_size)
-                chunk = fp.read(chunk_size)
-            md5_str = md5.hexdigest()
-        return md5_str == self.headers['etag']

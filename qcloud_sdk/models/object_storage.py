@@ -2,6 +2,8 @@
 对象存储
 """
 
+import hashlib
+
 
 # ----- S3对象 -----
 
@@ -36,21 +38,33 @@ class S3Object(object):
         # 本地
         self.local_file_path = local_file_path
 
-    def calculate_local_etag(self):
+    def calculate_local_etag(self, chunk_size=1024) -> str:
         """
         Ref:
           - https://teppen.io/2018/10/23/aws_s3_verify_etags/
           - https://www.programminghunter.com/article/1321266330/
         :return:
         """
-        pass
+        md5_digests = []
+        with open(self.local_file_path, 'rb') as f:
+            for chunk in iter(lambda: f.read(chunk_size), b''):
+                md5_digests.append(hashlib.md5(chunk).digest())
+        return hashlib.md5(b''.join(md5_digests)).hexdigest() + '-' + str(len(md5_digests))
 
-    def validate_etag(self) -> bool:
+    def validate_etag(self, file_path, chunk_size=1024) -> bool:
         """
+        验证文件的ETag是否与本地文件一致。仅可以在非分块上传和非加密的情况下使用。
+
+        TODO：支持分块上传或加密模式的ETAG验证。
+
         Ref:
           - https://teppen.io/2018/10/23/aws_s3_verify_etags/
+
+        :param file_path:
+        :param chunk_size:
+        :return:
         """
-        pass
+
 
     def calculate_local_crc64(self) -> int:
         """
