@@ -27,6 +27,9 @@
 - 增加HEAD Object API `head_object`。
 - 增加自定义下载对象API`download_object_to_file`。
 
+事件总线：
+- `put_all_events`增加time_sleep投递休眠时间参数。
+  
 ### Refactored 
 
 对象存储：

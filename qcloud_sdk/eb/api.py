@@ -1,7 +1,7 @@
 """
 腾讯云事件总线（EB）云API
 """
-
+import time
 from typing import Optional, List
 
 from qcloud_sdk.models.events import QCloudEvent, QCloudEventList
@@ -77,12 +77,27 @@ class EbAPIMixin(object):
         }
         return self.request_eb_api(action='PutEvents', region=region, params=params, api_region=api_region)
 
-    def put_all_events(self, event_list: List[QCloudEvent], event_bus_id=None, region=None, api_region: Optional[str] = None):
+    def put_all_events(self, event_list: List[QCloudEvent], event_bus_id=None, region=None,
+                       api_region: Optional[str] = None, time_sleep=1):
+        """
+
+        :param event_list:
+        :param event_bus_id:
+        :param region:
+        :param api_region:
+        :param time_sleep: 自定义参数，每次投递事件后休眠时间，单位为秒，默认为1秒。
+        :return:
+        """
         if len(event_list) > 10:
             # 拆分成10个一组
             events_chunk = [event_list[i:i + 10] for i in range(0, len(event_list), 10)]
             # 分别运行
-            return [self.put_events(events, event_bus_id, region, api_region) for events in events_chunk]
+            results = []
+            for events in events_chunk:
+                result = self.put_events(event_list=events, event_bus_id=event_bus_id, region=region, api_region=api_region)
+                results.append(result)
+                time.sleep(time_sleep)
+            return results
         # 正常调用
         return self.put_events(event_list, event_bus_id, region, api_region)
 
