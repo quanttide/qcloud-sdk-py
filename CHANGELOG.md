@@ -32,6 +32,7 @@
 对象存储：
 - 重构底层API `request_cos_api`、`request_cos_bucket_api`。
 - 重构GET Object API `get_object`。
+- `get_cos_object`重命名为`get_object_storage_service`。
 
 ### Removed
 

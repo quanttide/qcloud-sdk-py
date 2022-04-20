@@ -1,0 +1,17 @@
+component: scf
+name: object-list
+inputs:
+  name: ${app}-${name}
+  src: ./
+  description: 列举对象列表示例
+  handler: index.main_handler
+  runtime: Python3.6
+  namespace: default
+  region: ap-chengdu
+  memorySize: 64
+  timeout: 3
+  role: SCF_COSFullAccess
+  environment:
+    variables:
+      QCLOUDSDK_COS_DEFAULT_BUCKET: ${env:QCLOUDSDK_COS_DEFAULT_BUCKET}
+      QCLOUDSDK_COS_DEFAULT_PREFIX: ${env:QCLOUDSDK_COS_DEFAULT_PREFIX}

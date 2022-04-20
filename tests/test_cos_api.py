@@ -12,6 +12,52 @@ from tests.client import APIClientTestCase
 
 
 class CosAPITestCase(APIClientTestCase):
+    def test_get_service(self):
+        data = self.client.get_object_storage_service()
+        self.assertTrue(data)
+
+
+class BucketAPITestCase(APIClientTestCase):
+    """
+    存储桶API单元测试
+    """
+    def setUp(self):
+        # 默认文件夹
+        self.prefix = settings.COS_TEST_BUCEKT_PREFIX
+        self.next_marker = settings.COS_TEST_BUCEKT_NEXT_MARKER
+
+    def test_get_bucket(self):
+        data = self.client.get_bucket()
+        self.assertTrue(data)
+        self.assertTrue('Contents' in data)
+
+    def test_list_objects(self):
+        data = self.client.list_objects(prefix=self.prefix)
+        self.assertTrue(data)
+        # 不携带delimiter参数时不返回CommonPrefixes
+        self.assertFalse('CommonPrefixes' in data)
+
+    def test_list_objects_with_mark(self):
+        data = self.client.list_objects(prefix=self.prefix, marker=self.next_marker)
+        self.assertTrue(data)
+
+    def test_list_objects_with_delimiter(self):
+        data = self.client.list_objects(prefix=self.prefix, delimiter='/')
+        self.assertTrue(data)
+        # 携带delimiter参数时返回CommonPrefixes
+        self.assertTrue('CommonPrefixes' in data)
+        print(data['CommonPrefixes'])
+
+    def test_list_all_objects(self):
+        data = self.client.list_all_objects(prefix=self.prefix)
+        # !注意：1个子目录+1500个文件
+        self.assertEqual(1501, len(data))
+
+
+class ObjectAPITestCase(APIClientTestCase):
+    """
+    对象API单元测试
+    """
     def setUp(self):
         # 云端对象Key
         self.object_key = settings.COS_TEST_OBJECT_KEY
@@ -21,25 +67,6 @@ class CosAPITestCase(APIClientTestCase):
         self.object_raw_file_path = settings.COS_TEST_OBJECT_RAW_FILE_PATH
         # 对象ETag
         self.object_etag = settings.COS_TEST_OBJECT_ETAG
-
-    def test_get_service(self):
-        data = self.client.get_cos_service()
-        self.assertTrue(data)
-
-    def test_get_bucket(self):
-        data = self.client.get_bucket()
-        self.assertTrue(data)
-        self.assertTrue('Contents' in data)
-
-    @unittest.skip('测试数据待重配')
-    def test_list_objects_with_mark(self):
-        data = self.client.list_objects(marker=settings.COS_TEST_MARKER_OBJECT)
-        self.assertTrue(data)
-
-    @unittest.skip('测试数据待重配')
-    def test_list_all_objects(self):
-        data = self.client.list_all_objects()
-        self.assertTrue(len(data) > 1000)
 
     def test_head_object(self):
         self.client.head_object(object_key=self.object_key)

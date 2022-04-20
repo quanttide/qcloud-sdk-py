@@ -46,8 +46,8 @@ class CosAPIMixin(object):
         # TODO: 分类处理文件和XML数据
         return response
 
-    # ----- Service API -----
-    def get_cos_service(self, region=None):
+    # ----- 对象存储服务API -----
+    def get_object_storage_service(self, region=None):
         if region:
             host = f'cos.{region}.myqcloud.com'
         else:
@@ -57,26 +57,33 @@ class CosAPIMixin(object):
 
     # ----- 存储桶API -----
     def list_buckets(self, **kwargs):
-        return self.get_cos_service(**kwargs)
+        return self.get_object_storage_service(**kwargs)
 
     def get_bucket(self, region=None, bucket=None, prefix='', delimiter='',
-                   marker='', max_keys=1000):
+                   marker='', max_keys: int = 1000):
         """
-        列出该存储桶内的部分或者全部对象。
+        列出该存储桶内（或指定前缀）的对象和子目录。
 
         详见：https://cloud.tencent.com/document/product/436/7734
 
         备注：
+          - 文件夹也会被单独列举，比如`qcloud_sdk`。
           - 传入encoding-type=url时，NextMarker返回值无法直接使用。此处暂无必要，所以不传入此参数。
 
         :param region:
         :param bucket:
-        :param prefix:
-        :param delimiter:
-        :param marker: 起始对象键标记，从该标记之后（不含）按照 UTF-8 字典序返回对象键条目
-        :param max_keys:
+        :param prefix: 前缀匹配。用来规定返回的文件前缀地址，也包括子目录。
+        :param delimiter: 定界符为一个分隔符号，用于对对象键进行分组。一般是传`/`。
+                          所有对象键从 Prefix 或从头（如未指定 Prefix）到首个 delimiter 之间相同部分的路径归为一类，
+                          定义为 Common Prefix，然后列出所有 Common Prefix。
+        :param marker: 起始对象键标记。从该标记之后（不含）按照 UTF-8 字典序返回对象键条目
+        :param max_keys: 最大值。取值0-1000的整数，默认为1000。
         :return:
         """
+        # 验证max_keys
+        if not (isinstance(max_keys, int) and 0 <= max_keys <= 1000):
+            raise ValueError('max_keys传参错误')
+        # 前缀
         prefix = prefix or settings.COS_DEFAULT_PREFIX
         query_params = {'prefix': prefix, 'delimiter': delimiter,
                         'marker': marker, 'max-keys': max_keys}
@@ -84,10 +91,9 @@ class CosAPIMixin(object):
                                                headers={}, region=region, bucket=bucket)
         return response.data['ListBucketResult']
 
-    # ----- 对象API -----
     def list_objects(self, **kwargs):
         """
-        同`get_bucket`方法，列出该存储桶内的部分或者全部对象。
+        同`get_bucket`方法。
 
         详见：https://cloud.tencent.com/document/product/436/7734
 
@@ -97,9 +103,15 @@ class CosAPIMixin(object):
 
     def list_all_objects(self, **kwargs) -> list:
         """
-        (custom API) 获取存储桶下所有对象。
+        (custom API) 获取存储桶下或指定目录下的所有子目录和对象。
 
         基于`list_objects`封装。
+
+        备注：
+          - 原始API无参数可以过滤子目录，因此需要开发者使用时特别注意过滤。
+
+        TODO:
+          - 以标准库`os.walk`的风格或其他合适的方式返回。
 
         :param kwargs:
         :return:
@@ -124,6 +136,7 @@ class CosAPIMixin(object):
                 marker = data['NextMarker']
         return object_list
 
+    # ----- 对象API -----
     def head_object(self, object_key: str, bucket=None, region=None, appid=None):
         """
 
