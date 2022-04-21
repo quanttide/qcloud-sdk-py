@@ -74,15 +74,15 @@ class ObjectAPITestCase(APIClientTestCase):
     def test_get_object_with_range(self):
         content_length = 1024
         response = self.client.get_object(object_key=self.object_key, range_begin=0, range_end=content_length-1)
-        self.assertTrue(content_length, response.headers['content-length'])
+        self.assertEqual(content_length, int(response.headers['content-length']))
 
     def test_download_object_to_file(self):
         """
         测试报告：
          - 云端文件大小：75.23MB
-         - 本地下载大小：2.3M
+         - 本地下载大小：78.9MB
          - 本地原始文件大小：78.9MB
-         - 运行时间：1.415s
+         - 运行时间：44s
         """
         self.client.download_object_to_file(object_key=self.object_key, file_path=self.object_file_path,
                                             remove_unverified_file=False)

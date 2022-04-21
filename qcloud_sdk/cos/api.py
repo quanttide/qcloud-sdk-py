@@ -7,7 +7,7 @@ import urllib3
 from tqdm import tqdm
 
 from qcloud_sdk.config import settings
-from qcloud_sdk.utils.hashlib import calculate_file_md5
+from qcloud_sdk.utils.crcmod import calculate_file_crc64
 
 
 class CosAPIMixin(object):
@@ -175,7 +175,8 @@ class CosAPIMixin(object):
         query_params = {}
         # TODO：增加API请求头
         headers = {}
-        if range_begin and range_end:
+        # bugfix: 原本写成了`if range_begin and range_end`，当`range_begin=0`时会跳过条件。
+        if (range_begin is not None) and (range_end is not None):
             headers['Range'] = f'bytes={range_begin}-{range_end}'
         # 发请求
         response = self.request_cos_bucket_api('GET', path=f'/{object_key}', query_params=query_params, headers=headers,
@@ -220,11 +221,10 @@ class CosAPIMixin(object):
             # 分块保存文件
             response.save_object_to_file(file_path, mode='ab', chunk_size=file_chunk_size)
 
-        # 验证ETag是否和本地文件MD5相等
-        # TODO: 支持加密文件验证
-        if headers['etag'] != calculate_file_md5(file_path, file_chunk_size):
+        # CRC64校验
+        if int(headers['x-cos-hash-crc64ecma']) != calculate_file_crc64(file_path):
             # 校验失败文件支持自动清空，以方便捕获异常后重新下载。
             if remove_unverified_file:
                 os.remove(file_path)
             # TODO：换成自定义异常类，以方便被上级程序捕获。
-            raise ValueError('ETag校验不通过')
+            raise ValueError('CRC64校验不通过')
