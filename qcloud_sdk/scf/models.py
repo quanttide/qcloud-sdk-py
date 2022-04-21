@@ -5,6 +5,8 @@ from qcloud_sdk.models.events import QCloudEvent
 from qcloud_sdk.config import settings
 
 
+# ----- 云资源 -----
+
 class QCloudScfResource(QCloudResource):
     """
     云函数资源
@@ -20,6 +22,8 @@ class QCloudScfResource(QCloudResource):
         )
 
 
+# ----- 事件 -----
+
 class QCloudScfEvent(QCloudEvent):
     """
     云函数事件
@@ -29,3 +33,12 @@ class QCloudScfEvent(QCloudEvent):
         attributes['subject'] = attributes.get('subject') or QCloudScfResource().to_string()
         attributes['type'] = attributes.get('type') or ''
         super().__init__(data, **attributes)
+
+
+class QCloudScfEventList(list):
+    """
+    云函数事件列表
+
+    TODO：设计成可以添加事件的列表，代替[QCloudScfEvent(item) for item in data]
+    """
+    pass

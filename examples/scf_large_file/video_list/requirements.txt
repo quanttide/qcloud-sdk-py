@@ -1,0 +1,2 @@
+--extra-index-url=https://quanttide-pypi.pkg.coding.net/qtopen-python/qcloud-sdk-py/simple
+qcloud-sdk-py==0.3.3-beta.1

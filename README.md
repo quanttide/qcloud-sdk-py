@@ -15,7 +15,7 @@ pip install qcloud-sdk-py -i https://quanttide-pypi.pkg.coding.net/qtopen-python
 假设在环境变量中配置`QCLOUDSDK_SECRET_ID`和`QCLOUDSDK_SECRET_KEY`，未配置可以通过APIClient传入。
 ```python
 # 导入模块
-from qcloud_sdk import QCloudAPIClient
+from qcloud_sdk.api import QCloudAPIClient
 
 # 创建APIClient实例
 client = QCloudAPIClient()
@@ -28,7 +28,7 @@ client.request_api(service='cvm', region='ap-shanghai', api='DescribeZones', api
 
 ```python
 # APIClient
-from qcloud_sdk import QCloudAPIClient 
+from qcloud_sdk.api import QCloudAPIClient 
 
 # 通用API
 client = QCloudAPIClient()
