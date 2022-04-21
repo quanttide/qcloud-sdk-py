@@ -33,7 +33,7 @@ class CosResponseData(object):
             if self.raw_data:
                 self.data = xmltodict.parse(self.raw_data)
 
-    def save_object_to_local_file(self, file_path, mode='wb', chunk_size=1024):
+    def save_object_to_file(self, file_path, mode='wb', chunk_size=1024):
         """
         保存对象到本地文件。用于GET Object等API。
 
@@ -49,4 +49,3 @@ class CosResponseData(object):
         with open(file_path, mode) as fd:
             for chunk in self.response.iter_content(chunk_size=chunk_size):
                 fd.write(chunk)
-

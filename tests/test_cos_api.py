@@ -79,15 +79,14 @@ class ObjectAPITestCase(APIClientTestCase):
     def test_download_object_to_file(self):
         """
         测试报告：
-         - 云端文件大小：1.59M
+         - 云端文件大小：75.23MB
          - 本地下载大小：2.3M
-         - 本地原始文件大小：1.7M
+         - 本地原始文件大小：78.9MB
          - 运行时间：1.415s
         """
-        self.client.download_object_to_file(object_key=self.object_key, file_path=self.object_file_path)
+        self.client.download_object_to_file(object_key=self.object_key, file_path=self.object_file_path,
+                                            remove_unverified_file=False)
         self.assertTrue(os.path.exists(self.object_file_path))
-        # 原始文件和下载文件是不一样的，可能是对象存储压缩处理了原始文件
-        self.assertNotEqual(calculate_file_md5(self.object_raw_file_path), calculate_file_md5(self.object_file_path))
 
 
 if __name__ == '__main__':

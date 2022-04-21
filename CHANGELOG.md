@@ -1,5 +1,16 @@
 # CHANGELOG
 
+## [v0.3.4] - 2022-04-22
+
+### Bugfix
+
+对象存储：
+- 修复`download_object_to_file`效验ETag异常。
+
+### Removed 
+
+- 移除`from qcloud_sdk import QCloudAPIClient`等的导入支持。
+
 ## [v0.3.3] - 2022-04-21
 
 重构对象存储API。

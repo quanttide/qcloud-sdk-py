@@ -218,7 +218,7 @@ class CosAPIMixin(object):
             response = self.get_object(object_key=object_key, bucket=bucket, region=region, appid=appid,
                                        range_begin=range_begin, range_end=range_end)
             # 分块保存文件
-            response.save_object_to_local_file(file_path, mode='ab', chunk_size=file_chunk_size)
+            response.save_object_to_file(file_path, mode='ab', chunk_size=file_chunk_size)
 
         # 验证ETag是否和本地文件MD5相等
         # TODO: 支持加密文件验证
