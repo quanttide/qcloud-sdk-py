@@ -1,0 +1,34 @@
+# Serverless项目配置文件
+# 基于腾讯云版CLI及其多函数组件
+# https://github.com/serverless-components/tencent-multi-scf/blob/master/docs/configure.md
+
+# app和name定义两个的原因不明，似乎是库的设计问题
+app: sdk-examples
+name: cfs-with-scf
+stage: ${env:STAGE}
+component: multi-scf
+inputs:
+  src:
+    src: ./
+    exclude:
+      - .env
+  runtime: Python3.7
+  region: ap-chengdu
+  functions:
+    # 默认函数名为：`${name}-${stage}-${app}-${Key}`
+    cfs-accessment:
+      src: ./cfs_accessment
+      handler: index.main_handler
+      role: SCF_StorageFullAccess
+      timeout: 1800
+      vpc:
+        vpcId: ${env:VPC_ID}
+        subnetId: ${env:SUBNET_ID}
+      cfs:
+        - cfsId: ${env:CFS_ID}
+          mountInsId: ${env:CFS_MOUNT_ID}
+          localMountDir: ${env:CFS_LOCAL_MOUNT_DIR}
+          remoteMountDir: ${env:CFS_REMOTE_MOUNT_DIR}
+      environments:
+        - key: CFS_LOCAL_MOUNT_DIR
+          value: ${env:CFS_LOCAL_MOUNT_DIR}
