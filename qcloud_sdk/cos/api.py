@@ -2,9 +2,9 @@
 
 import os
 import json
-import hashlib
 
 import urllib3
+from tqdm import tqdm
 
 from qcloud_sdk.config import settings
 from qcloud_sdk.utils.hashlib import calculate_file_md5
@@ -183,7 +183,9 @@ class CosAPIMixin(object):
         return response
 
     def download_object_to_file(self, object_key, file_path, bucket=None, region=None, appid=None,
-                                request_chunk_size=1024*1024, file_chunk_size=1024) -> None:
+                                request_chunk_size=1024*1024, file_chunk_size=1024,
+                                remove_existed_file: bool = True,
+                                remove_unverified_file: bool = True) -> None:
         """
         (custom API) 下载对象为本地文件
 
@@ -198,20 +200,31 @@ class CosAPIMixin(object):
         :param appid:
         :param request_chunk_size: 网络请求大小，默认为1M
         :param file_chunk_size: 写入文件大小，默认为1k
+        :param remove_existed_file: 是否删除下载前已存在文件，默认为True。
+        :param remove_unverified_file: 是否删除结束下载以后未通过验证的文件，默认为True。
         :return:
         """
-        headers = self.head_object(object_key=object_key, bucket=bucket, region=region, appid=appid)
-        content_length = int(headers['content-length'])
-        request_ranges = [(i, min(i-1+request_chunk_size, content_length)) for i in range(0, content_length, request_chunk_size)]
-        # 清空文件
-        if os.path.exists(file_path):
+        # 清空下载前已存在文件
+        if remove_existed_file and os.path.exists(file_path):
             os.remove(file_path)
+
+        # 获取对象元数据
+        headers = self.head_object(object_key=object_key, bucket=bucket, region=region, appid=appid)
+        # 获取对象长度
+        content_length = int(headers['content-length'])
         # 分块下载文件
-        for range_begin, range_end in request_ranges:
+        request_ranges = [(i, min(i-1+request_chunk_size, content_length)) for i in range(0, content_length, request_chunk_size)]
+        for range_begin, range_end in tqdm(request_ranges):
             response = self.get_object(object_key=object_key, bucket=bucket, region=region, appid=appid,
                                        range_begin=range_begin, range_end=range_end)
             # 分块保存文件
             response.save_object_to_local_file(file_path, mode='ab', chunk_size=file_chunk_size)
+
         # 验证ETag是否和本地文件MD5相等
         # TODO: 支持加密文件验证
-        assert headers['etag'] != calculate_file_md5(file_path, file_chunk_size), 'ETag校验不通过'
+        if headers['etag'] != calculate_file_md5(file_path, file_chunk_size):
+            # 校验失败文件支持自动清空，以方便捕获异常后重新下载。
+            if remove_unverified_file:
+                os.remove(file_path)
+            # TODO：换成自定义异常类，以方便被上级程序捕获。
+            raise ValueError('ETag校验不通过')

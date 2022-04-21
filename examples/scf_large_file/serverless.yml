@@ -17,11 +17,11 @@ inputs:
       - data
       - deprecated
       - tests
-  runtime: Python3.6
+  runtime: Python3.7
   region: ap-chengdu
   functions:
     # 默认函数名为：`${name}-${stage}-${app}-${Key}`
-    videos:
+    video-list:
       src: ./video_list
       handler: index.main_handler
       role: SCF_StorageFullAccess
@@ -35,7 +35,7 @@ inputs:
           value: ${env:QCLOUDSDK_COS_DEFAULT_PREFIX}
         - key: QCLOUDSDK_EB_DEFAULT_EVENT_BUS_ID
           value: ${env:QCLOUDSDK_EB_DEFAULT_EVENT_BUS_ID}
-    volumes:
+    video-download:
       src: ./video_download
       handler: index.main_handler
       role: SCF_StorageFullAccess

@@ -1,22 +1,6 @@
 # CHANGELOG
 
-## [v0.4.0] - 2022-04-
-
-增加云函数API、日志服务API，事件总线增加事件连接器API。
-
-## Features
-
-云函数：
-- 基本API`request_scf_api`。
-
-日志服务：
-- 基本API`request_cls_api`。
-- 日志检索API`search_log`。
-
-事件总线：
-- 创建事件连接器API`create_event_connection`。
-
-## [v0.3.3] - 2022-04-18 
+## [v0.3.3] - 2022-04-21
 
 重构对象存储API。
 
@@ -28,7 +12,7 @@
 - 增加自定义下载对象API`download_object_to_file`。
 
 事件总线：
-- `put_all_events`增加time_sleep投递休眠时间参数。
+- `put_all_events`增加`time_sleep`投递休眠时间参数。
   
 ### Refactored 
 
@@ -98,7 +82,6 @@
 事件总线：
 - 使用`QCloudEventList`重构投递事件`put_events`内部实现。
 
-
 ## [v0.2.2] - 2022-03-23
 
 增加临时密钥支持
@@ -110,7 +93,6 @@
 
 单元测试：
 - 增加测试工具函数`reload_settings`。
-
 
 ## [v0.2.1] - 2022-03-22 
 
@@ -138,7 +120,6 @@
 ## Bugfix
 
 - setup.cfg增加package_data设置、修复package.find的exclude选项。
-
 
 ## [v0.2.0] - 2022-03-21
 
