@@ -5,7 +5,7 @@
 ### Bugfix
 
 对象存储：
-- 修复`download_object_to_file`效验ETag异常。
+- 修复`download_object_to_file`效验异常。
 
 ### Removed 
 
