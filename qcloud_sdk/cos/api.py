@@ -7,7 +7,7 @@ import urllib3
 from tqdm import tqdm
 
 from qcloud_sdk.config import settings
-from qcloud_sdk.utils.crcmod import calculate_file_crc64
+from qcloud_sdk.cos.utils import calculate_file_crc64
 
 
 class CosAPIMixin(object):
@@ -222,7 +222,8 @@ class CosAPIMixin(object):
             response.save_object_to_file(file_path, mode='ab', chunk_size=file_chunk_size)
 
         # CRC64校验
-        if int(headers['x-cos-hash-crc64ecma']) != calculate_file_crc64(file_path):
+        # TODO：校验结果写入日志，包括CRC64的值、校验结果是否正确。
+        if int(headers['x-cos-hash-crc64ecma']) != calculate_file_crc64(file_path, file_chunk_size):
             # 校验失败文件支持自动清空，以方便捕获异常后重新下载。
             if remove_unverified_file:
                 os.remove(file_path)
