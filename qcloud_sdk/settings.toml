@@ -1,6 +1,10 @@
 # 默认配置
 [default]
+# ----- 开发设置 -----
+DEBUG = '@boolean False'
+
 # ----- 基本设置 -----
+# 云API密钥
 SESSION_TOKEN = '@none None'
 # 默认地域
 DEFAULT_REGION = '@none None'
