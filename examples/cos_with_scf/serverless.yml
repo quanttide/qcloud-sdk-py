@@ -14,21 +14,21 @@ inputs:
       - tests
   runtime: Python3.7
   region: ap-chengdu
-  funtions:
+  functions:
     object-list:
-      src: ./
+      src: ./object_list
       description: 列举对象列表示例
       handler: index.main_handler
-      runtime: Python3.6
       namespace: default
       region: ap-chengdu
       memorySize: 64
       timeout: 3
       role: SCF_COSFullAccess
-      environment:
-        variables:
-          QCLOUDSDK_COS_DEFAULT_BUCKET: ${env:QCLOUDSDK_COS_DEFAULT_BUCKET}
-          QCLOUDSDK_COS_DEFAULT_PREFIX: ${env:QCLOUDSDK_COS_DEFAULT_PREFIX}
+      environments:
+        - key: QCLOUDSDK_COS_DEFAULT_BUCKET
+          value: ${env:QCLOUDSDK_COS_DEFAULT_BUCKET}
+        - key: QCLOUDSDK_COS_DEFAULT_PREFIX
+          value: ${env:QCLOUDSDK_COS_DEFAULT_PREFIX}
     large-file-download:
       src: ./large_file_download
       description: 大文件下载示例
