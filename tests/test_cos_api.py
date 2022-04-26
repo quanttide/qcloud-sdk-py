@@ -6,7 +6,6 @@ import unittest
 import os
 
 from qcloud_sdk.config import settings
-from qcloud_sdk.utils.hashlib import calculate_file_md5
 
 from tests.client import APIClientTestCase
 

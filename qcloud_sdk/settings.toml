@@ -1,7 +1,7 @@
 # 默认配置
 [default]
 # ----- 开发设置 -----
-DEBUG = '@boolean False'
+DEBUG = '@bool False'
 
 # ----- 基本设置 -----
 # 云API密钥
