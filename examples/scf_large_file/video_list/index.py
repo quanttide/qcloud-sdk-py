@@ -15,7 +15,7 @@ def list_video_files() -> List[Dict[str, Any]]:
     results = []
     for item in data:
         if '.mp4' in item['Key']:
-            results.append({'video_key': item['Key']})
+            results.append({'video_key': item['Key'], 'size': int(item['Size']) or 0})
     return results
 
 
@@ -27,5 +27,6 @@ def put_video_task_events(tasks):
 
 def main_handler(event, context):
     tasks = list_video_files()
-    put_video_task_events(tasks[0:20])
-    return True
+    # 选择最大的20个视频
+    selected_tasks = sorted(tasks, key=lambda item: item['size'], reverse=True)[0:20]
+    put_video_task_events(selected_tasks)

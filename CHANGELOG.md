@@ -2,10 +2,12 @@
 
 ## [v0.3.6] - 2022-04-26
 
+对象存储下载API增加断点续传功能。
+
 ### Features 
 
 对象存储：
-- `download_object_to_file`增加断点续传特性
+- `download_object_to_file`增加断点续传功能。
 
 ### Refactored
 
