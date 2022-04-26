@@ -36,6 +36,8 @@ class CosAPIResponse(object):
         """
         转换为dict
 
+        TODO: 增加对content-length等的二次处理
+
         :return: dict
         """
         return {
