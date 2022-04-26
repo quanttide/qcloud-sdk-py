@@ -1,5 +1,18 @@
 # CHANGELOG
 
+## [v0.3.6] - 2022-04-26
+
+### Features 
+
+对象存储：
+- `download_object_to_file`增加断点续传特性
+
+### Refactored
+
+对象存储：
+- 重构`CosAPIResponse`数据模型
+- 重构API模块划分。
+
 ## [v0.3.5] - 2022-04-22 
 
 ### Refactored

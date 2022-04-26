@@ -1,1 +1,57 @@
-app: sdk-examples-cos-with-scf
+app: sdk-examples
+name: cos-with-scf
+stage: ${env:STAGE}
+component: multi-scf
+inputs:
+  src:
+    src: ./
+    exclude:
+      - .env
+      - .python-version
+      - .gitignore
+      - data
+      - deprecated
+      - tests
+  runtime: Python3.7
+  region: ap-chengdu
+  funtions:
+    object-list:
+      src: ./
+      description: 列举对象列表示例
+      handler: index.main_handler
+      runtime: Python3.6
+      namespace: default
+      region: ap-chengdu
+      memorySize: 64
+      timeout: 3
+      role: SCF_COSFullAccess
+      environment:
+        variables:
+          QCLOUDSDK_COS_DEFAULT_BUCKET: ${env:QCLOUDSDK_COS_DEFAULT_BUCKET}
+          QCLOUDSDK_COS_DEFAULT_PREFIX: ${env:QCLOUDSDK_COS_DEFAULT_PREFIX}
+    large-file-download:
+      src: ./large_file_download
+      description: 大文件下载示例
+      handler: index.main_handler
+      role: SCF_StorageFullAccess
+      memorySize: 384
+      timeout: 3600
+      initTimeout: 300
+      asyncRunEnable: true
+      traceEnable: true
+      retryNum: 0
+      vpc:
+        vpcId: ${env:VPC_ID}
+        subnetId: ${env:SUBNET_ID}
+      cfs:
+        - cfsId: ${env:CFS_ID}
+          mountInsId: ${env:CFS_MOUNT_ID}
+          localMountDir: ${env:CFS_LOCAL_MOUNT_DIR}
+          remoteMountDir: ${env:CFS_REMOTE_MOUNT_DIR}
+      environments:
+        - key: QCLOUDSDK_COS_DEFAULT_BUCKET
+          value: ${env:QCLOUDSDK_COS_DEFAULT_BUCKET}
+        - key: QCLOUDSDK_COS_DEFAULT_PREFIX
+          value: ${env:QCLOUDSDK_COS_DEFAULT_PREFIX}
+        - key: CFS_LOCAL_MOUNT_DIR
+          value: ${env:CFS_LOCAL_MOUNT_DIR}
