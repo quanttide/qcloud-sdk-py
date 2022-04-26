@@ -8,6 +8,8 @@ from qcloud_sdk.cos.api import CosAPIMixin
 from qcloud_sdk.eb.api import EbAPIMixin
 from qcloud_sdk.sms.api import SmsAPIMixin
 
+from qcloud_sdk.config import settings
+
 
 class QCloudAPIClient(
     APIClientInitializer,
@@ -20,3 +22,9 @@ class QCloudAPIClient(
     CosAPIMixin
 ):
     pass
+
+
+# APIClient单例
+# 适用于通过环境变量配置SDK默认参数的容器或函数计算应用
+if settings.SECRET_ID and settings.SECRET_KEY:
+    qcloud_api_client = QCloudAPIClient()
