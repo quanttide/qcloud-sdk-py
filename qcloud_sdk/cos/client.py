@@ -4,7 +4,7 @@ import requests
 
 from qcloud_sdk.base.client import APIClientInitializer
 from qcloud_sdk.cos.sign import calculate_auth_string
-from qcloud_sdk.cos.models import CosResponseData
+from qcloud_sdk.cos.models import CosAPIResponse
 
 
 class CosBaseAPIClientMixin(object):
@@ -38,7 +38,7 @@ class CosBaseAPIClientMixin(object):
         url = 'https://' + host + path
         headers = self.generate_cos_request_headers(method, host, path, query_params, headers)
         r = requests.request(method=method, url=url, params=query_params, headers=headers, stream=stream)
-        return CosResponseData(r, stream=stream)
+        return CosAPIResponse(r, stream=stream)
 
 
 class CosBaseAPIClient(APIClientInitializer, CosBaseAPIClientMixin):

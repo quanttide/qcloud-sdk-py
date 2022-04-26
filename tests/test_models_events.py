@@ -1,7 +1,7 @@
 import unittest
 
 from qcloud_sdk.config import settings
-from qcloud_sdk.models.events import QCloudEvent, QCloudEventList
+from qcloud_sdk.models.event_bus import QCloudEvent, QCloudEventList
 from qcloud_sdk.scf.models import QCloudScfResource, QCloudScfEvent
 
 

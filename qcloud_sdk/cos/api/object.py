@@ -6,7 +6,7 @@ import os
 
 import urllib3
 from tqdm import tqdm
-from qcloud_sdk.cos.utils import calculate_file_crc64
+from qcloud_sdk.cos.utils import verify_file_crc64
 
 
 class CosObjectAPIMixin(object):
@@ -27,10 +27,10 @@ class CosObjectAPIMixin(object):
         headers = {}
         response = self.request_cos_bucket_api(method='HEAD', path=f'/{object_key}', query_params=query_params, headers=headers,
                                                bucket=bucket, region=region, appid=appid)
-        return response.headers
+        return dict(response.headers)
 
     def get_object(self, object_key: str, bucket=None, region=None, appid=None,
-                   range_begin=None, range_end=None) -> urllib3.response.HTTPResponse:
+                   range_begin=None, range_end=None):
         """
 
         https://cloud.tencent.com/document/product/436/7753
@@ -90,7 +90,7 @@ class CosObjectCustomAPIMixin(object):
         # 获取对象元数据
         headers = self.head_object(object_key=object_key, bucket=bucket, region=region, appid=appid)
         # 获取对象长度
-        content_length = int(headers['content-length'])
+        content_length = int(headers['Content-Length'])
         # 分块下载文件
         request_ranges = [(i, min(i-1+request_chunk_size, content_length)) for i in range(0, content_length, request_chunk_size)]
         for range_begin, range_end in tqdm(request_ranges):
@@ -101,10 +101,9 @@ class CosObjectCustomAPIMixin(object):
 
         # CRC64校验
         # TODO：校验结果写入日志，包括CRC64的值、校验结果是否正确。
-        if int(headers['x-cos-hash-crc64ecma']) != calculate_file_crc64(file_path, file_chunk_size):
+        if verify_file_crc64(int(headers['x-cos-hash-crc64ecma']), file_path, file_chunk_size):
             # 校验失败文件支持自动清空，以方便捕获异常后重新下载。
             if remove_unverified_file:
                 os.remove(file_path)
             # TODO：换成自定义异常类，以方便被上级程序捕获。
             raise ValueError('CRC64校验不通过')
-

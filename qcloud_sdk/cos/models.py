@@ -2,36 +2,48 @@
 对象存储数据模型
 """
 
-import hashlib
-
-from requests import Response
+import requests
 import xmltodict
 
 
-class CosRequestParams(object):
+class CosAPIRequest(object):
     pass
 
 
-class CosResponseData(object):
+class CosAPIResponse(object):
     """
     对象存储响应数据
 
     Ref:
       - https://docs.python-requests.org/en/latest/api/#requests.Response
     """
-    def __init__(self, response: Response, stream=False):
-        self.response = response
-        self.headers = response.headers
+    def __init__(self, raw_response: requests.Response, stream=False):
+        self.raw_response = raw_response
+        self.headers = raw_response.headers
         self.stream = stream
         self.data = None
         if stream:
             # 文件流
-            self.raw_data = response.raw
+            self.raw_data = raw_response.raw
+            # TODO: 使用S3Object作为data的值
         else:
             # XML原始数据
-            self.raw_data = response.content
+            self.raw_data = raw_response.content
             if self.raw_data:
                 self.data = xmltodict.parse(self.raw_data)
+
+    def to_dict(self):
+        """
+        转换为dict
+
+        :return: dict
+        """
+        return {
+            'data': self.data,
+            'raw_data': self.raw_data,
+            'raw_response': self.raw_response,
+            'stream': self.stream,
+        }.update(dict(self.headers))
 
     def save_object_to_file(self, file_path, mode='wb', chunk_size=1024):
         """
@@ -47,5 +59,5 @@ class CosResponseData(object):
             raise ValueError('非原始数据格式')
         # 保存到本地
         with open(file_path, mode) as fd:
-            for chunk in self.response.iter_content(chunk_size=chunk_size):
+            for chunk in self.raw_response.iter_content(chunk_size=chunk_size):
                 fd.write(chunk)

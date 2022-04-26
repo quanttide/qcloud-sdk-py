@@ -13,7 +13,7 @@ def calculate_file_md5(file_path, chunk_size=1024):
     return md5_str
 
 
-def calculate_file_crc64(file_path, chunk_size=1024):
+def calculate_file_crc64(file_path, chunk_size=None):
     """
     CRC64校验工具
 
@@ -21,12 +21,17 @@ def calculate_file_crc64(file_path, chunk_size=1024):
     - http://crcmod.sourceforge.net/crcmod.html#mkcrcfun-crc-function-factory
 
     :param file_path: 文件路径
-    :param chunk_size: default 1024
+    :param chunk_size: default 1024*1024
     :return:
     """
+    chunk_size = chunk_size or 1024*1024
     crc64 = crcmod.Crc(0x142F0E1EBA9EA3693, initCrc=0, xorOut=0xffffffffffffffff, rev=True)
     with open(file_path, 'rb') as f:
         # https://docs.python.org/3/library/functions.html#iter
         for chunk in iter(partial(f.read, 64), b''):
             crc64.update(chunk)
     return crc64.crcValue
+
+
+def verify_file_crc64(crc64_value: int, file_path: str, chunk_size=None):
+    return crc64_value != calculate_file_crc64(file_path, chunk_size)

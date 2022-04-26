@@ -4,7 +4,7 @@
 import time
 from typing import Optional, List
 
-from qcloud_sdk.models.events import QCloudEvent, QCloudEventList
+from qcloud_sdk.models.event_bus import QCloudEvent, QCloudEventList
 from qcloud_sdk.config import settings
 
 

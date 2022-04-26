@@ -23,12 +23,13 @@ class CosObjectAPITestCase(APIClientTestCase):
         self.object_raw_file_path = settings.COS_TEST_OBJECT_RAW_FILE_PATH
 
     def test_head_object(self):
-        self.client.head_object(object_key=self.object_key)
+        result = self.client.head_object(object_key=self.object_key)
+        self.assertTrue(int(result['Content-Length']))
 
     def test_get_object_with_range(self):
         content_length = 1024
         response = self.client.get_object(object_key=self.object_key, range_begin=0, range_end=content_length-1)
-        self.assertEqual(content_length, int(response.headers['content-length']))
+        self.assertEqual(content_length, int(response.headers['Content-Length']))
 
 
 class CosObjectCustomAPITestCase(APIClientTestCase):

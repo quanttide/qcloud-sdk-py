@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from qcloud_sdk.models.resources import QCloudResource
-from qcloud_sdk.models.events import QCloudEvent
+from qcloud_sdk.models.cloud_resources import QCloudResource
+from qcloud_sdk.models.event_bus import QCloudEvent
 from qcloud_sdk.config import settings
 
 
