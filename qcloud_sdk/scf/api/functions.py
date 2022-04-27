@@ -1,15 +1,19 @@
 # -*- coding: utf-8 -*-
 
 
-class ScfFunctionMixin(object):
+class ScfFunctionAPIMixin(object):
     """
     函数相关API
     """
     # ----- 函数执行API -----
     def invoke_function(self, function_name, region=None, **kwargs):
         """
+        执行函数
 
         https://cloud.tencent.com/document/product/583/17243
+
+        TODO：
+          - 增加可选参数。
 
         :return:
         """
@@ -64,13 +68,26 @@ class ScfFunctionMixin(object):
         """
         return self.request_scf_api(action='DeleteFunction', params={})
 
+
+class ScfFunctionCustomAPIMixin(object):
+    # ----- 函数执行API -----
+    def retry_invoke_function(self):
+        pass
+
+    # ----- 函数资源管理API -----
+    def has_function(self):
+        return bool(self.get_function())
+
+    def create_or_update_function(self):
+        pass
+
     def recreate_function(self):
         """
-        (high-level API) 重新创建函数
+        重新创建函数
           - 如果已经存在，则销毁以后重建；
           - 如果不存在，则直接重建。
         :return:
         """
-        if self.get_function():
+        if self.has_function():
             self.delete_function()
         self.create_function()

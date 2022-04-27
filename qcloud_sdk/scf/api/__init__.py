@@ -3,13 +3,14 @@
 """
 
 from .base import ScfBaseAPIMixin
-from .functions import ScfFunctionMixin
+from .functions import ScfFunctionAPIMixin, ScfFunctionCustomAPIMixin
 from .triggers import ScfTriggerAPIMixin
 
 
 class ScfAPIMixin(
     ScfBaseAPIMixin,
-    ScfFunctionMixin,
+    ScfFunctionAPIMixin,
+    ScfFunctionCustomAPIMixin,
     ScfTriggerAPIMixin,
 ):
     """
