@@ -20,6 +20,8 @@ CLS_DEFAULT_REGION = '@none None'
 # ----- SCF云函数 -----
 # SCF运行环境
 SCF_RUNTIME = '@none None'
+# SCF默认地域，默认使用DEFAULT_REGION
+SCF_DEFAULT_REGION = '@none None'
 # SCF默认命名空间，默认为default
 SCF_DEFAULT_NAMESPACE = 'default'
 # SCF默认函数名称

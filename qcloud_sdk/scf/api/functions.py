@@ -1,21 +1,24 @@
 # -*- coding: utf-8 -*-
 
 
-class ScfAPIMixin(object):
-    def request_scf_api(self, action, params):
-        return self.request_api(service='scf', action=action, params=params, api_version='2018-04-16')
-
-    # ----- 函数API -----
-    # --- 函数运行API ---
-    def invoke_function(self):
+class ScfFunctionMixin(object):
+    """
+    函数相关API
+    """
+    # ----- 函数执行API -----
+    def invoke_function(self, function_name, region=None, **kwargs):
         """
 
         https://cloud.tencent.com/document/product/583/17243
 
         :return:
         """
-        return self.request_scf_api(action='Invoke', params={})
+        params = {
+            'FunctionName': function_name,
+        }
+        return self.request_scf_api(action='Invoke', params=params, region=region)['Result']
 
+    # ----- 函数配置API -----
     def update_function_code(self):
         """
         https://cloud.tencent.com/document/product/583/18581
@@ -24,7 +27,7 @@ class ScfAPIMixin(object):
         """
         return self.request_scf_api(action='UpdateFunctionCode', params={})
 
-    # --- 函数资源管理API ---
+    # ----- 函数资源管理API -----
     def list_functions(self):
         """
 
@@ -71,27 +74,3 @@ class ScfAPIMixin(object):
         if self.get_function():
             self.delete_function()
         self.create_function()
-
-    # ----- 触发器API -----
-    def create_trigger(self):
-        """
-
-        https://cloud.tencent.com/document/product/583/18589
-
-        :return:
-        """
-        pass
-
-    def delete_trigger(self):
-        """
-        https://cloud.tencent.com/document/product/583/18588
-        :return:
-        """
-        pass
-
-    def list_triggers(self):
-        """
-        https://cloud.tencent.com/document/product/583/44268
-        :return:
-        """
-        pass
