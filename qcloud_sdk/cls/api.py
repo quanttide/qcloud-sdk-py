@@ -1,4 +1,6 @@
-# -*- coding: utf-8 -*-
+"""
+日志服务API
+"""
 
 from typing import Union
 
@@ -6,19 +8,33 @@ from qcloud_sdk.config import settings
 
 
 class ClsAPIMixin(object):
+    """
+    日志服务API
+    """
     def request_cls_api(self, action, params, region=None, api_region=None):
+        # 地域参数
         region = region or settings.CLS_DEFAULT_REGION or settings.DEFAULT_REGION
+        if not region:
+            raise ValueError('地域不可为空')
+        # 调用API
         return self.request_api(service='cls', action=action, params=params, region=region,
                                 api_version='2020-10-16', api_region=api_region)
 
     def search_log(self, topic_id: str, timestamp_from: Union[str, int], timestamp_to: Union[str, int], query: str,
-                   limit=None, context=None, sort=None, use_new_analysis=None, **kwargs):
+                   limit=1000, context='', sort='desc', use_new_analysis=True, region=None, **kwargs):
         """
-        https://cloud.tencent.com/document/product/614/56447
+        检索分析日志（https://cloud.tencent.com/document/product/614/56447）
+
+        针对单个日志主题，查询并发数不能超过15。
+
+        TODO：
+          - 起始时间：增加datetime对象或ISO格式字符串支持。
+          - 查询参数：针对不同的检索条件验证参数。
 
         :return:
         """
-        limit = limit or 1000
+        if sort not in ['asc', 'desc']:
+            raise ValueError('sort参数取值错误')
         params = {
             'TopicId': topic_id,
             'From': timestamp_from,
@@ -29,7 +45,7 @@ class ClsAPIMixin(object):
             'Sort': sort,
             'UseNewAnalysis': use_new_analysis,
         }
-        return self.request_cls_api(action='SearchLog', params=params, **kwargs)
+        return self.request_cls_api(action='SearchLog', params=params, region=region, **kwargs)
 
     def search_all_log(self, topic_id: str, timestamp_from: Union[str, int], timestamp_to: Union[str, int], query: str,
                        limit=None, context=None, sort=None, use_new_analysis=None, **kwargs):

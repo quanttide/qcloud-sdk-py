@@ -14,6 +14,9 @@ DEFAULT_REGION = '@none None'
 COS_DEFAULT_REGION = '@none None'
 COS_DEFAULT_PREFIX = ''
 
+# ----- CLS日志服务 -----
+CLS_DEFAULT_REGION = '@none None'
+
 # ----- SCF云函数 -----
 # SCF运行环境
 SCF_RUNTIME = '@none None'

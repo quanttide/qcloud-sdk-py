@@ -1,5 +1,17 @@
 # CHANGELOG
 
+## [v0.4.0] - 2022-04-
+
+### Features
+
+APIClient:
+- 增加`qcloud_api_client`单例，适用于环境变量传参的云原生应用。
+
+日志服务：
+- 增加日志服务基本API`request_cls_api`。
+- 增加日志检索API`search_log`。
+
+
 ## [v0.3.6] - 2022-04-26
 
 对象存储下载API增加断点续传功能。
