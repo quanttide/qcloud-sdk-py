@@ -9,6 +9,7 @@ from qcloud_sdk.eb.api import EbAPIMixin
 from qcloud_sdk.sms.api import SmsAPIMixin
 from qcloud_sdk.cls.api import ClsAPIMixin
 from qcloud_sdk.scf.api import ScfAPIMixin
+from qcloud_sdk.tmt.api import TmtAPIMixin
 
 from qcloud_sdk.config import settings
 
@@ -21,6 +22,7 @@ class QCloudAPIClient(
     EbAPIMixin,
     SmsAPIMixin,
     ClsAPIMixin,
+    TmtAPIMixin,
     # 使用对象存储协议的云产品，使用CosBaseAPIClientMixin类。
     CosBaseAPIClientMixin,
     CosAPIMixin

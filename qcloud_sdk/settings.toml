@@ -41,3 +41,7 @@ EB_SUPPORTED_REGIONS_DOC = 'https://cloud.tencent.com/document/product/1359/6770
 SMS_SUPPORTED_REGIONS = ['ap-beijing', 'ap-guangzhou', 'ap-nanjing']
 # SMS支持地域的文档
 SMS_SUPPORTED_REGIONS_DOC = 'https://cloud.tencent.com/document/api/382/52071#.E5.9C.B0.E5.9F.9F.E5.88.97.E8.A1.A8'
+
+# ----- TMT机器翻译 -----
+# TMT默认地域
+TMT_DEFAULT_REGION = '@none None'

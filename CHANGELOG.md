@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## [v0.4.0] - 2022-04-
+## [v0.4.0] - 2022-05-
 
 ### Features
 
@@ -10,6 +10,10 @@ APIClient:
 日志服务：
 - 增加日志服务基本API`request_cls_api`。
 - 增加日志检索API`search_log`。
+
+机器翻译：
+- 增加机器翻译基本API`request_tmt_api`。
+- 增加文本翻译API`translate_text`
 
 
 ## [v0.3.6] - 2022-04-26
