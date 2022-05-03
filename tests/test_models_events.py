@@ -9,7 +9,7 @@ class TestDataMixin(object):
     def setUp(self):
         self.resource_raw = {
             'namespace': settings.SCF_DEFAULT_NAMESPACE,
-            'function_name': settings.SCF_TEST_FUNCTION_NAME,
+            'function_name': settings.TEST_SCF_FUNCTION_NAME,
         }
         self.resource = QCloudScfResource(**self.resource_raw)
         self.event_raw = {

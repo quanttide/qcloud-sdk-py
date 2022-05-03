@@ -14,7 +14,7 @@ class ScfCloudResourceTestCase(unittest.TestCase):
             'region': 'ap-shanghai',
             'account': f'uin/{settings.UIN}',
             'namespace': settings.SCF_DEFAULT_NAMESPACE,
-            'function_name': settings.SCF_TEST_FUNCTION_NAME,
+            'function_name': settings.TEST_SCF_FUNCTION_NAME,
         }
 
     def test_init(self):
