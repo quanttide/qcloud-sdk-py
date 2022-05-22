@@ -1,0 +1,35 @@
+[build-system]
+requires = ["setuptools>=61", "setuptools.scm"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "qcloud-sdk-py"
+description = "Python SDK for TencentCloud"
+authors = [{name = "QuantTide Inc.", email = "opensource@quanttide.com"}]
+version = "0.4.1-alpha.1"
+classifiers = [
+    "Programming Language :: Python :: 3",
+]
+# dynaconf最新版本不兼容3.6，暂不确定移除3.6版本支持的版本号
+requires-python = '>=3.7'
+dependencies = [
+    "requests",
+    "dynaconf>=3.0.0",
+    "Jinja2",
+    "cloudevents",
+    "xmltodict",
+    "tqdm",
+    "crcmod",
+]
+# dynamic = ["version"]
+
+[project.license]
+file = "LICENSE"
+
+[project.readme]
+file = "README.md"
+content-type = "text/markdown"
+
+[tool.setuptools]
+packages = ["qcloud_sdk"]
+package-data = {"qcloud_sdk" = ["*.toml"] }
