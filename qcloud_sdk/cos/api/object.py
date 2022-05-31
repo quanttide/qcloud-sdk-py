@@ -112,7 +112,7 @@ class CosObjectCustomAPIMixin(object):
         # TODO：校验结果写入日志，包括CRC64的值、校验结果是否正确。
         if not verify_file_crc64(int(headers['x-cos-hash-crc64ecma']), tmp_file_path, file_chunk_size):
             # 校验失败文件支持自动清空，以方便捕获异常后重新下载。
-            os.remove(file_path) if remove_unverified_file else None
+            os.remove(tmp_file_path) if remove_unverified_file else None
             # TODO：换成自定义异常类，以方便被上级程序捕获。
             raise ValueError('CRC64校验不通过') if raise_verification_error else None
 
