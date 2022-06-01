@@ -42,7 +42,7 @@ class CosBucketAPITestCase(APIClientTestCase):
         print(data['CommonPrefixes'])
 
 
-class CosBucketCustomAPITestCase(APIClientTestCase):
+class CosBucketIntegratedAPITestCase(APIClientTestCase):
     def setUp(self):
         # 默认文件夹
         self.prefix = settings.COS_TEST_BUCEKT_PREFIX

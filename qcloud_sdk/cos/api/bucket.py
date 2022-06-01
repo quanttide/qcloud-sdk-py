@@ -52,10 +52,10 @@ class CosBucketAPIMixin(object):
         return self.get_bucket(**kwargs)
 
 
-class CosBucketCustomAPIMixin(object):
+class CosBucketIntegratedAPIMixin(object):
     def list_all_objects(self, **kwargs) -> list:
         """
-        (custom API) 获取存储桶下或指定目录下的所有子目录和对象。
+        (Integrated API) 获取存储桶下或指定目录下的所有子目录和对象。
 
         基于`list_objects`封装。
 

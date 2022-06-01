@@ -2,8 +2,8 @@
 
 from qcloud_sdk.cos.api.base import CosBaseAPIMixin
 from qcloud_sdk.cos.api.service import CosServiceAPIMixin
-from qcloud_sdk.cos.api.bucket import CosBucketAPIMixin, CosBucketCustomAPIMixin
-from qcloud_sdk.cos.api.object import CosObjectAPIMixin, CosObjectCustomAPIMixin
+from qcloud_sdk.cos.api.bucket import CosBucketAPIMixin, CosBucketIntegratedAPIMixin
+from qcloud_sdk.cos.api.object import CosObjectAPIMixin, CosObjectIntegratedAPIMixin
 
 
 class CosAPIMixin(
@@ -13,10 +13,10 @@ class CosAPIMixin(
     CosServiceAPIMixin,
     # 存储桶API
     CosBucketAPIMixin,
-    CosBucketCustomAPIMixin,
+    CosBucketIntegratedAPIMixin,
     # 对象API
     CosObjectAPIMixin,
-    CosObjectCustomAPIMixin
+    CosObjectIntegratedAPIMixin
 ):
     """
     对象存储API

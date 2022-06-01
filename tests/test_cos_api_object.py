@@ -33,7 +33,7 @@ class CosObjectAPITestCase(APIClientTestCase):
         self.assertEqual(content_length, int(response.headers['Content-Length']))
 
 
-class CosObjectCustomAPITestCase(APIClientTestCase):
+class CosObjectIntegratedAPITestCase(APIClientTestCase):
     def setUp(self):
         # 云端对象Key
         self.object_key = settings.COS_TEST_OBJECT_KEY

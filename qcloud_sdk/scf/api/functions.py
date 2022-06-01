@@ -69,7 +69,7 @@ class ScfFunctionAPIMixin(object):
         return self.request_scf_api(action='DeleteFunction', params={})
 
 
-class ScfFunctionCustomAPIMixin(object):
+class ScfFunctionIntegratedAPIMixin(object):
     # ----- 函数执行API -----
     def retry_invoke_function(self):
         pass

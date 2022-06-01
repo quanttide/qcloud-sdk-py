@@ -62,14 +62,14 @@ class CosObjectAPIMixin(object):
         return response
 
 
-class CosObjectCustomAPIMixin(object):
+class CosObjectIntegratedAPIMixin(object):
     def download_object_to_file(self, object_key, file_path, bucket=None, region=None, appid=None,
                                 request_chunk_size=1024*1024*20, file_chunk_size=1024*1024,
                                 remove_existed_tmp_file: bool = False,
                                 remove_unverified_file: bool = True,
                                 raise_verification_error: bool = True) -> Dict[str, Union[int, Any]]:
         """
-        (custom API) 下载对象为本地文件
+        (Integrated API) 下载对象为本地文件
 
         Ref:
           - https://urllib3.readthedocs.io/en/latest/advanced-usage.html#streaming-and-i-o

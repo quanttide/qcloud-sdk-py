@@ -1,5 +1,18 @@
 # CHANGELOG
 
+## [v0.4.1] - 2022-06-01 
+
+Hotfix版本。修复对象存储下载API异常。
+
+### Refactored
+
+- 重新定义Custom API为Integrated API，重命名所有相关类；Custom用于指代库的用户的自定义行为。
+
+### Bugfix
+
+对象存储：
+- 下载对象API：修复下载文件未通过验证时删除异常。
+
 ## [v0.4.0] - 2022-05-03
 
 ### Features
