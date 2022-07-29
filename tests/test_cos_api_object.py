@@ -45,20 +45,39 @@ class CosObjectAPITestCase(APIClientTestCase):
         pass
 
     def test_put_object(self):
-        result = self.client.put_object()
+        response = self.client.put_object(object_key='qcloud_sdk/fake-key', data='test')
+        self.assertEqual(200, response.status_code)
+        self.assertTrue(response.hash_crc64ecma > 0)
+
+    def test_put_object_with_no_content(self):
+        response = self.client.put_object(object_key='qcloud_sdk/fake-key')
+        self.assertEqual(200, response.status_code)
+        self.assertEqual(0, response.hash_crc64ecma)
+
+    def test_put_object_repeatedly(self):
+        """
+        重复上传会覆盖
+        """
+        response = self.client.put_object(object_key='qcloud_sdk/fake-key', data='test')
+        self.assertEqual(200, response.status_code)
+        response2 = self.client.put_object(object_key='qcloud_sdk/fake-key', data='test2')
+        self.assertEqual(200, response2.status_code)
 
     def test_delete_object(self):
         """
         TODO: 通过mock代替真实请求
-        :return:
         """
-        result = self.client.delete_object()
+        self.client.put_object(object_key='fake-key', data='test')
+        response = self.client.delete_object(object_key='fake-key')
+        self.assertEqual(204, response.status_code)
 
     def test_delete_object_not_exists(self):
         """
+        Note：返回值和存在时没有区别。
         """
-        # self.assertFalse(self.client.exists_object('fake-object'))
-        result = self.client.delete_object('fake-object')
+        self.assertFalse(self.client.exists_object('fake-object'))
+        response = self.client.delete_object('fake-object')
+        self.assertEqual(204, response.status_code)
 
 
 class CosObjectIntegratedAPITestCase(APIClientTestCase):

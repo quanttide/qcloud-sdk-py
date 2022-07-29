@@ -7,7 +7,7 @@ class CosBaseAPIMixin(object):
     """
     通用API
     """
-    def request_cos_bucket_api(self, method, path, query_params, headers, appid=None, region=None, bucket=None, stream=False):
+    def request_cos_bucket_api(self, method, path, query_params, headers, data=None, appid=None, region=None, bucket=None, stream=False):
         """
         对象存储存储桶通用API
 
@@ -18,6 +18,7 @@ class CosBaseAPIMixin(object):
         :param path:
         :param query_params:
         :param headers:
+        :param data:
         :param appid:
         :param region:
         :param bucket:
@@ -34,6 +35,6 @@ class CosBaseAPIMixin(object):
         if not bucket:
             raise ValueError('存储桶不可以为空')
         host = f'{bucket}-{appid}.cos.{region}.myqcloud.com'
-        response = self.request_cos_api(method=method, host=host, path=path, query_params=query_params, headers=headers, stream=stream)
+        response = self.request_cos_api(method=method, host=host, path=path, query_params=query_params, data=data, headers=headers, stream=stream)
         # TODO: 分类处理文件和XML数据
         return response

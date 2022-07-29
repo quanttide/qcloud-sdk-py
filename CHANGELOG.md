@@ -14,6 +14,7 @@
 ### Refactored
 
 对象存储：
+- `request_cos_api`和`request_cos_bucket_api`增加`data`参数。
 - （不兼容更新） `head_object`返回值改为`CosAPIResponse`对象。
 
 ## [v0.4.1] - 2022-06-01 

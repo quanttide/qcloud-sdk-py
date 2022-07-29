@@ -39,10 +39,10 @@ class CosBaseAPIClientMixin(object):
         headers['Authorization'] = calculate_auth_string(method, path, query_params, headers, self.secret_id, self.secret_key)
         return headers
 
-    def request_cos_api(self, method, host, path, query_params, headers, stream=False):
+    def request_cos_api(self, method, host, path, query_params, headers, data=None, stream=False):
         url = 'https://' + host + path
         headers = self.generate_cos_request_headers(method, host, path, query_params, headers)
-        r = requests.request(method=method, url=url, params=query_params, headers=headers, stream=stream)
+        r = requests.request(method=method, url=url, params=query_params, data=data, headers=headers, stream=stream)
         return CosAPIResponse(r, stream=stream)
 
 

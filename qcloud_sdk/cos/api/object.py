@@ -63,8 +63,8 @@ class CosObjectAPIMixin(object):
     def post_object(self):
         pass
 
-    def put_object(self, object_key, headers, bucket=None, region=None, appid=None):
-        response = self.request_cos_bucket_api('PUT', path=f'/{object_key}', headers=headers, bucket=bucket, region=region, appid=appid)
+    def put_object(self, object_key, data=None, headers=None, bucket=None, region=None, appid=None):
+        response = self.request_cos_bucket_api('PUT', path=f'/{object_key}', query_params=None, data=data, headers=headers, bucket=bucket, region=region, appid=appid)
         return response
 
     def delete_object(self, object_key, headers=None, bucket=None, region=None, appid=None):

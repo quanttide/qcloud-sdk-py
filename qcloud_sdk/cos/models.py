@@ -1,6 +1,7 @@
 """
 对象存储数据模型
 """
+from typing import Optional
 
 import requests
 import xmltodict
@@ -26,6 +27,7 @@ class CosAPIResponse(object):
         self.status_code: int = raw_response.status_code
         self.headers: dict = dict(raw_response.headers)
         self.content_length: int = int(self.headers['Content-Length'])
+        self.hash_crc64ecma: Optional[int] = int(self.headers['x-cos-hash-crc64ecma']) if 'x-cos-hash-crc64ecma' in self.headers else None
         self.data = None
         if stream:
             # 文件流
