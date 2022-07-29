@@ -18,9 +18,14 @@ class CosAPIResponse(object):
       - https://docs.python-requests.org/en/latest/api/#requests.Response
     """
     def __init__(self, raw_response: requests.Response, stream=False):
+        # 原始请求对象
         self.raw_response = raw_response
-        self.headers = raw_response.headers
+        # feature flags
         self.stream = stream
+        # 根据COS需求解析的属性
+        self.status_code: int = raw_response.status_code
+        self.headers: dict = dict(raw_response.headers)
+        self.content_length: int = int(self.headers['Content-Length'])
         self.data = None
         if stream:
             # 文件流

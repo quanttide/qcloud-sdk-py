@@ -27,6 +27,11 @@ class CosBaseAPIClientMixin(object):
         :param secret_key:
         :return:
         """
+        # bugfix: 传入None时转为空字典
+        if not headers:
+            headers = {}
+        if not query_params:
+            query_params = {}
         headers['Host'] = host
         headers['Content-Type'] = headers.get('Content-Type', 'application/xml')
         if self.session_token:

@@ -1,5 +1,21 @@
 # CHANGELOG
 
+## [v0.4.2] - 2022-07
+
+（不兼容更新）增加对象存储API。
+
+### Features
+
+对象存储：
+- 增加上传对象API`put_object`。
+- 增加删除对象API`delete_object`。
+- 增加对象是否存在API`exists_object`。
+
+### Refactored
+
+对象存储：
+- （不兼容更新） `head_object`返回值改为`CosAPIResponse`对象。
+
 ## [v0.4.1] - 2022-06-01 
 
 Hotfix版本。修复对象存储下载API异常。

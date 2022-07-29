@@ -25,13 +25,58 @@ class CosObjectAPITestCase(APIClientTestCase):
         self.object_raw_file_path = settings.COS_TEST_OBJECT_RAW_FILE_PATH
 
     def test_head_object(self):
-        result = self.client.head_object(object_key=self.object_key)
-        self.assertTrue(int(result['Content-Length']))
+        response = self.client.head_object(object_key=self.object_key)
+        self.assertTrue(response.content_length)
+
+    def test_head_object_not_exists(self):
+        """
+        TODO
+        :return:
+        """
+        response = self.client.head_object(object_key='fake-key')
+        self.assertEqual(404, response.status_code)
 
     def test_get_object_with_range(self):
         content_length = 1024
         response = self.client.get_object(object_key=self.object_key, range_begin=0, range_end=content_length - 1)
         self.assertEqual(content_length, int(response.headers['Content-Length']))
+
+    def test_post_object(self):
+        pass
+
+    def test_put_object(self):
+        result = self.client.put_object()
+
+    def test_delete_object(self):
+        """
+        TODO: 通过mock代替真实请求
+        :return:
+        """
+        result = self.client.delete_object()
+
+    def test_delete_object_not_exists(self):
+        """
+        """
+        # self.assertFalse(self.client.exists_object('fake-object'))
+        result = self.client.delete_object('fake-object')
+
+
+class CosObjectIntegratedAPITestCase(APIClientTestCase):
+    def setUp(self):
+        # 云端对象Key
+        self.object_key = settings.COS_TEST_OBJECT_KEY
+        # 本地对象下载目标文件路径
+        self.object_file_path = settings.COS_TEST_OBJECT_FILE_PATH
+        # 本地对象下载原始文件路径
+        self.object_raw_file_path = settings.COS_TEST_OBJECT_RAW_FILE_PATH
+
+    def test_exists_object_true(self):
+        object_exists = self.client.exists_object(self.object_key)
+        self.assertTrue(object_exists)
+
+    def test_exists_object_false(self):
+        object_exists = self.client.exists_object('fake-key')
+        self.assertFalse(object_exists)
 
 
 class DownloadObjectTestCase(APIClientTestCase):

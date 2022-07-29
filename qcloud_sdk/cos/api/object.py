@@ -5,7 +5,6 @@
 import os
 from typing import Dict, Union, Any
 
-import urllib3
 from tqdm import tqdm
 
 from qcloud_sdk.cos.utils import verify_file_crc64, remove_if_exists, get_file_size
@@ -15,7 +14,7 @@ class CosObjectAPIMixin(object):
     """
     对象API
     """
-    def head_object(self, object_key: str, bucket=None, region=None, appid=None):
+    def head_object(self, object_key: str, bucket=None, region=None, appid=None) -> dict:
         """
 
         :param object_key: 对象键
@@ -29,7 +28,7 @@ class CosObjectAPIMixin(object):
         headers = {}
         response = self.request_cos_bucket_api(method='HEAD', path=f'/{object_key}', query_params=query_params, headers=headers,
                                                bucket=bucket, region=region, appid=appid)
-        return dict(response.headers)
+        return response
 
     def get_object(self, object_key: str, bucket=None, region=None, appid=None,
                    range_begin=None, range_end=None):
@@ -61,8 +60,33 @@ class CosObjectAPIMixin(object):
                                                bucket=bucket, region=region, appid=appid, stream=True)
         return response
 
+    def post_object(self):
+        pass
+
+    def put_object(self, object_key, headers, bucket=None, region=None, appid=None):
+        response = self.request_cos_bucket_api('PUT', path=f'/{object_key}', headers=headers, bucket=bucket, region=region, appid=appid)
+        return response
+
+    def delete_object(self, object_key, headers=None, bucket=None, region=None, appid=None):
+        response = self.request_cos_bucket_api('DELETE', path=f'/{object_key}', query_params=None, headers=headers, bucket=bucket, region=region, appid=appid)
+        return response
+
 
 class CosObjectIntegratedAPIMixin(object):
+    def exists_object(self, object_key, bucket=None, region=None, appid=None) -> bool:
+        """
+        (Integrated API) 对象是否存在
+        :return:
+        """
+        response = self.head_object(object_key=object_key, region=region, appid=appid)
+        if response.status_code == 200:
+            return True
+        elif response.status_code == 404:
+            return False
+        else:
+            # TODO：进一步验证不同情况下的状态码以后规范抛出值
+            raise ValueError('状态码异常')
+
     def download_object_to_file(self, object_key, file_path, bucket=None, region=None, appid=None,
                                 request_chunk_size=1024*1024*20, file_chunk_size=1024*1024,
                                 remove_existed_tmp_file: bool = False,
