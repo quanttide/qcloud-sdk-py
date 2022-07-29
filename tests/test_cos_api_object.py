@@ -49,6 +49,14 @@ class CosObjectAPITestCase(APIClientTestCase):
         self.assertEqual(200, response.status_code)
         self.assertTrue(response.hash_crc64ecma > 0)
 
+    def test_put_object_with_file(self):
+        local_file_path = './test.txt'
+        with open(local_file_path, 'wb') as f:
+            f.write(b'test')
+        response = self.client.put_object(object_key='qcloud_sdk/fake-key', data=open(local_file_path, 'rb'))
+        self.assertEqual(200, response.status_code)
+        os.remove(local_file_path)
+
     def test_put_object_with_no_content(self):
         response = self.client.put_object(object_key='qcloud_sdk/fake-key')
         self.assertEqual(200, response.status_code)
