@@ -120,9 +120,9 @@ class CosObjectIntegratedAPIMixin(object):
         existed_tmp_file_size = get_file_size(tmp_file_path)
 
         # 获取对象元数据
-        headers = self.head_object(object_key=object_key, bucket=bucket, region=region, appid=appid)
+        response = self.head_object(object_key=object_key, bucket=bucket, region=region, appid=appid)
         # 获取对象长度
-        content_length = int(headers['Content-Length'])
+        content_length = response.content_length
 
         # 分块下载文件
         request_ranges = [(i, min(i-1+request_chunk_size, content_length)) for i in range(existed_tmp_file_size, content_length, request_chunk_size)]
@@ -134,7 +134,7 @@ class CosObjectIntegratedAPIMixin(object):
 
         # CRC64校验
         # TODO：校验结果写入日志，包括CRC64的值、校验结果是否正确。
-        if not verify_file_crc64(int(headers['x-cos-hash-crc64ecma']), tmp_file_path, file_chunk_size):
+        if not verify_file_crc64(response.hash_crc64ecma, tmp_file_path, file_chunk_size):
             # 校验失败文件支持自动清空，以方便捕获异常后重新下载。
             os.remove(tmp_file_path) if remove_unverified_file else None
             # TODO：换成自定义异常类，以方便被上级程序捕获。

@@ -7,7 +7,7 @@
 ### Features
 
 对象存储：
-- 增加上传对象API`put_object`。
+- 增加上传或更新对象API`put_object`。
 - 增加删除对象API`delete_object`。
 - 增加对象是否存在API`exists_object`。
 
