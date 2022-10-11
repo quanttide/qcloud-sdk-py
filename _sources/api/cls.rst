@@ -1,4 +1,4 @@
-API documentation
+日志服务API
 =================
 
 .. automodule:: qcloud_sdk.cls.api
