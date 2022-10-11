@@ -45,3 +45,8 @@ SMS_SUPPORTED_REGIONS_DOC = 'https://cloud.tencent.com/document/api/382/52071#.E
 # ----- TMT机器翻译 -----
 # TMT默认地域
 TMT_DEFAULT_REGION = '@none None'
+
+# ----- IotCloud物联网通信 -----
+IOTCLOUD_DEFAULT_REGION = 'ap-guangzhou'
+IOTCLOUD_SUPPORTED_REGIONS = ['ap-guangzhou', 'ap-bangkok', 'na-ashburn', 'eu-frankfurt', 'ap-shanghai-fsi']
+IOTCLOUD_SUPPORTED_REGIONS_DOC = 'https://cloud.tencent.com/document/product/634/71976'

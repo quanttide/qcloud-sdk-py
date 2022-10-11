@@ -1,5 +1,17 @@
 # CHANGELOG
 
+## [v0.5.0] - 2022-10-
+
+### Features 
+
+物联网云：
+- 增加物联网云基本API`request_iotcloud_api`。
+- 增加获取产品列表API`describe_iot_products`。
+- 增加切换设备可用状态API`update_iot_device_available_state`。
+- 增加获取设备影子API`describe_iot_device_shadow`。
+- 增加更新设备影子API`update_iot_device_shadow`。
+
+
 ## [v0.4.3] - 2022-10-11
 
 开源仓库到GitHub。
