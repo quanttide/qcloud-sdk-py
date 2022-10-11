@@ -7,7 +7,7 @@
 ## 安装
 
 ```
-pip install qcloud-sdk-py -i https://quanttide-pypi.pkg.coding.net/qtopen-python/qcloud-sdk-py/simple
+pip install qcloud-sdk-py
 ```
 
 ## 使用
@@ -26,36 +26,4 @@ client.request_api(service='cvm', region='ap-shanghai', api='DescribeZones', api
 
 ## API列表
 
-```python
-# APIClient
-from qcloud_sdk.api import QCloudAPIClient 
-
-# 通用API
-client = QCloudAPIClient()
-client.request_api()
-
-# COS对象存储API 
-client.request_cos_api()
-client.list_buckets()
-client.list_objects()
-client.list_all_objects()
-
-# EB事件总线API
-client.request_eb_api()
-client.list_event_buses()
-client.put_events()
-
-# SMS短信服务API
-client.request_sms_api()
-client.send_sms_api()
-
-# 配置
-from qcloud_sdk.config import settings
-
-# 数据模型
-from qcloud_sdk.models import QCloudResource, QCloudEvent
-from qcloud_sdk.scf.models import QCloudScfResource, QCloudScfEvent
-
-# 异常类
-from qcloud_sdk.exceptions import QCloudAPIException
-```
+见[CHANGELOG](CHANGELOG.md)
