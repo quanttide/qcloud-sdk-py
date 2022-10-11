@@ -24,6 +24,6 @@ client = QCloudAPIClient()
 client.request_api(service='cvm', region='ap-shanghai', api='DescribeZones', api_params={})
 ```
 
-## API列表
+## 文档
 
-见[CHANGELOG](CHANGELOG.md)
+[腾讯云Python服务端SDK文档](https://quanttide.github.io/qcloud-sdk-py/README.html)
