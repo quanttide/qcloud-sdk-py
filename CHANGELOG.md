@@ -1,5 +1,14 @@
 # CHANGELOG
 
+## [v0.4.3] - 2022-10-11
+
+开源仓库到GitHub。
+
+### Features
+
+- 发布到[PyPI](https://pypi.org/project/qcloud-sdk-py)。
+- 发布文档到[GitHub Pages](https://quanttide.github.io/qcloud-sdk-py/)
+
 ## [v0.4.2] - 2022-10-03
 
 （不兼容更新）增加对象存储API。
