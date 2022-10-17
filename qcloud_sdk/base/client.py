@@ -100,8 +100,8 @@ class BaseAPIClientMixin(object):
         mock = mock or self.mock
         if mock:
             mock_server_tag = mock_server_tag or self.mock_server_tag
-            endpoint = f"{service}.mock.tencentcloudapi.com?tag={mock_server_tag}&action={action}&version={api_version}"
-            url = "https://" + endpoint
+            endpoint = f"{service}.mock.tencentcloudapi.com"
+            url = f"https://{endpoint}?tag={mock_server_tag}&action={action}&version={api_version}"
             r = requests.get(url)
             return self.parse_response_data(r)
         # 真实请求
