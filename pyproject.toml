@@ -6,7 +6,7 @@ build-backend = "setuptools.build_meta"
 name = "qcloud-sdk-py"
 description = "Python SDK for TencentCloud"
 authors = [{name = "QuantTide Inc.", email = "opensource@quanttide.com"}]
-version = "0.5.0"
+version = "0.6.0-alpha.1"
 classifiers = [
     "Programming Language :: Python :: 3",
 ]

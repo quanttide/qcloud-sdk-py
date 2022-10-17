@@ -13,7 +13,7 @@ class IoTCloudAPIMixin:
             pass
         return params
 
-    def request_iotcloud_api(self, action, params, region=None, api_region=None):
+    def request_iotcloud_api(self, action, params, region=None, api_region=None, **kwargs):
         """
 
         :param action:
@@ -27,7 +27,8 @@ class IoTCloudAPIMixin:
         return self.request_api(service='iotcloud', action=action, params=params, region=region,
                                 api_version='2021-04-08', api_region=api_region,
                                 supported_regions=settings.IOTCLOUD_SUPPORTED_REGIONS,
-                                supported_regions_doc=settings.IOTCLOUD_SUPPORTED_REGIONS_DOC)
+                                supported_regions_doc=settings.IOTCLOUD_SUPPORTED_REGIONS_DOC,
+                                **kwargs)
 
     # ----- 产品API -----
 
@@ -55,7 +56,7 @@ class IoTCloudAPIMixin:
 
     # ----- 设备影子API  -----
 
-    def describe_iot_device_shadow(self, product_id: str, device_name: str):
+    def describe_iot_device_shadow(self, product_id: str, device_name: str, **kwargs):
         """
 
         :param product_id:
@@ -63,11 +64,13 @@ class IoTCloudAPIMixin:
         :return:
         """
         result = self.request_iotcloud_api(action='DescribeDeviceShadow',
-                                           params={'ProductId': product_id, 'DeviceName': device_name})
+                                           params={'ProductId': product_id, 'DeviceName': device_name},
+                                           **kwargs)
         return json.loads(result['Data'])
 
-    def update_iot_device_shadow(self, product_id: str, device_name: str, state: dict, shadow_version):
+    def update_iot_device_shadow(self, product_id: str, device_name: str, state: dict, shadow_version, **kwargs):
         result = self.request_iotcloud_api(action='UpdateDeviceShadow',
                                            params={'ProductId': product_id, 'DeviceName': device_name,
-                                                   'State': json.dumps(state), 'ShadowVersion': shadow_version})
+                                                   'State': json.dumps(state), 'ShadowVersion': shadow_version},
+                                           **kwargs)
         return json.loads(result['Data'])

@@ -13,7 +13,7 @@ from qcloud_sdk.config import settings
 
 
 class APIClientInitializer(object):
-    def __init__(self, secret_id=None, secret_key=None, session_token=None):
+    def __init__(self, secret_id=None, secret_key=None, session_token=None, mock=False, mock_server_tag='default'):
         """
         APIClient初始化器
 
@@ -21,15 +21,23 @@ class APIClientInitializer(object):
           - 优化云函数未配置Role时报错不友好的问题。
           - 优化云函数作为全局变量（单例模式）下settings无法读入的问题，可参考serverless-db-sdk。
 
-        :param secret_id: 密钥ID，session_token非空时为临时密钥ID
-        :param secret_key: 密钥Key，session_token非空时为临时密钥Key
-        :param session_token: 临时密钥Session Token
+        :param secret_id: 密钥ID，session_token非空时为临时密钥ID。
+        :param secret_key: 密钥Key，session_token非空时为临时密钥Key。
+        :param session_token: 临时密钥Session Token。
+        :param mock: 是否使用Mock。
+        :param mock_server_tag: Mock服务标签。
         """
+        # 密钥
         self.secret_id = secret_id or settings.SECRET_ID
         self.secret_key = secret_key or settings.SECRET_KEY
         self.session_token = session_token or settings.SESSION_TOKEN
-        assert self.secret_id, "SecretID不可为空，请在实例化时传入secret_id参数或配置QCLOUDSDK_SECRET_ID"
-        assert self.secret_key, "SecretKey不可为空，请在实例化时传入secret_key参数或配置QCLOUDSDK_SECRET_KEY"
+        # mock
+        self.mock = mock
+        self.mock_server_tag = mock_server_tag
+        # 校验
+        if self.mock:
+            assert self.secret_id, "SecretId不可为空，请在实例化时传入secret_id参数或配置环境变量QCLOUDSDK_SECRET_ID"
+            assert self.secret_key, "SecretKey不可为空，请在实例化时传入secret_key参数或配置环境变量QCLOUDSDK_SECRET_KEY"
 
 
 class BaseAPIClientMixin(object):
@@ -74,7 +82,7 @@ class BaseAPIClientMixin(object):
 
     def request_api(self, service: str, action: str, params: dict, api_version: str,
                     region: Optional[str] = None, supported_regions: Optional[List[str]] = None, supported_regions_doc: Optional[str] = None,
-                    api_region: Optional[str] = None,) -> dict:
+                    api_region: Optional[str] = None, mock=None, mock_server_tag=None) -> dict:
         """
         :param service: 云服务标签，比如`cvm`（云数据库）
         :param action: 云API，如``。
@@ -84,8 +92,19 @@ class BaseAPIClientMixin(object):
         :param supported_regions: 此云服务支持地域列表
         :param supported_regions_doc: 云服务支持地域列表的文档
         :param api_region: API接入地域
+        :param mock: 是否为Mock API，默认为APIClient设置的mock属性。
+        :param mock_server_tag: Mock Server标签。
         :return:
         """
+        # mock
+        mock = mock or self.mock
+        if mock:
+            mock_server_tag = mock_server_tag or self.mock_server_tag
+            endpoint = f"{service}.mock.tencentcloudapi.com?tag={mock_server_tag}&action={action}&version={api_version}"
+            url = "https://" + endpoint
+            r = requests.get(url)
+            return self.parse_response_data(r)
+        # 真实请求
         # 服务地址，默认就近接入
         if api_region:
             endpoint = f'{service}.{api_region}.tencentcloudapi.com'

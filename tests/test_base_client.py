@@ -28,7 +28,7 @@ class APIClientInitializerTestCase(unittest.TestCase):
 class BaseAPIClientTestCase(unittest.TestCase):
     def test_request_api(self):
         client = BaseAPIClient()
-        data = client.request_api(service='cvm', region='ap-shanghai', action='DescribeZones', params={},
+        data = client.request_api(service='cvm', region='ap-guangzhou', action='DescribeZones', params={},
                                   api_version='2017-03-12')
         self.assertTrue(data)
 
