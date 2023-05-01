@@ -1,0 +1,41 @@
+#file: noinspection YAMLSchemaValidation
+# Serverless项目配置文件
+# 基于腾讯云版CLI及其多函数组件
+# https://github.com/serverless-components/tencent-multi-scf/blob/master/docs/configure.md
+
+component: multi-scf
+app: sdk-examples
+name: tdmq-pulsar-with-scf
+stage: ${env:STAGE}
+inputs:
+  src:
+    src: ./
+    exclude:
+      - .env
+      - .python-version
+      - .gitignore
+      - tests
+  region: ap-shanghai
+  namespace: default
+  publishDescription: 使用云函数的消息队列示例
+  functions:
+    consumer:
+      name: ${app}-${name}-consumer
+      src: ./consumer
+      handler: index.main_handler
+      runtime: Python3.7
+      # timeout: 300
+    producer:
+      name: ${app}-${name}-producer
+      src: ./producer
+      handler: index.main_handler
+      runtime: Python3.7
+  environments:
+    - key: PULSAR_SERVICE_URL
+      value: ${env:PULSAR_SERVICE_URL}
+    - key: PULSAR_AUTHENTICATION
+      value: ${env:PULSAR_AUTHENTICATION}
+    - key: PULSAR_TOPIC
+      value: ${env:PULSAR_TOPIC}
+    - key: PULSAR_SUBSCRIPTION_NAME
+      value: ${env:PULSAR_SUBSCRIPTION_NAME}
